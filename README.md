@@ -28,6 +28,7 @@
 - Link to Assignment 1: [**Assignment 1**](https://DStojanac.github.io/HCI-2024-2025/assignments/assignment_1/figma_video.mp4) <!-- Replace with actual URL -->
 - Link to Assignment 2: [**Assignment 2**](https://github.com/DStojanac/HCI-2024-2025/blob/main/assignments/assignment_2/userPersonas.pdf) <!-- Replace with actual URL -->
 - Link to Assignment 3: [**Assignment 3**](https://hci-2024-2025.vercel.app/) <!-- Replace with actual URL -->
+- Link to Assignment 4: [**Assignment 4**](https://github.com/DStojanac/HCI-2024-2025/blob/main/assignments/assignment_4/High-fidelity-model.png) <!-- Replace with actual URL -->
 <!-- Add more assignments as necessary -->
 
 ## Project Requirements
