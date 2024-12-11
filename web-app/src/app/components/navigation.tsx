@@ -15,20 +15,20 @@ const pages: Page[] = [
     path: "/recipes",
   },
   {
-    title: "Blog",
+    title: "Blog Posts",
     path: "/blog",
   },
   {
-    title: "About us",
+    title: "About Us",
     path: "/about",
   },
   {
-    title: "Support us",
-    path: "/support",
+    title: "Log In",
+    path: "/login",
   },
   {
-    title: "Account",
-    path: "/account",
+    title: "Sign Up",
+    path: "/signup",
   },
 ];
 
