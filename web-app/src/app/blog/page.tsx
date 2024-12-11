@@ -20,10 +20,8 @@ export type BlogRecipePost = {
   mealType: string[];
 };
 
-export const BASE_API_URL = "https://dummyjson.com";
-
 async function getBlogPosts(): Promise<BlogRecipePost[]> {
-  const response = await fetch(`${BASE_API_URL}/recipes`);
+  const response = await fetch(`${process.env.BASE_API_URL}/recipes`);
   const data = await response.json();
   return data.recipes;
 }

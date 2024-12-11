@@ -1,5 +1,5 @@
 import { Navigation } from "@/app/components/navigation";
-import { BASE_API_URL } from "../page";
+
 import { BlogRecipePost } from "../page";
 
 type BlogPageProps = {
@@ -9,7 +9,7 @@ type BlogPageProps = {
 };
 
 async function getBlogPost(id: string): Promise<BlogRecipePost> {
-  const response = await fetch(`${BASE_API_URL}/recipes/${id}`);
+  const response = await fetch(`${process.env.BASE_API_URL}/recipes/${id}`);
   const data = response.json();
   return data;
 }
