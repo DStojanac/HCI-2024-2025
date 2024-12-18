@@ -32,9 +32,8 @@ export default async function BlogPostsPage() {
 
   return (
     <>
-      <div className="flex justify-between pt-8 px-8">
-        <div>COOKSY</div>
-        <Navigation />
+      <div className="container mx-auto max-w-full px-4 lg:px-20 md:px-10 sm:px-5">
+        <h1>Blog Page</h1>
       </div>
       <h1 className="flex justify-center text-4xl p-5">BLOG POSTS </h1>
 
