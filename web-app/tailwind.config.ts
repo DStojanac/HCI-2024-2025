@@ -17,6 +17,7 @@ const config: Config = {
         "second-paragraph-text": "var(--second-paragraph-text)",
         "white-text": "var(--white-text)",
         "black-text": "var(--black-text)",
+        "navigation-text": "var(--navigation-text)",
       },
       fontFamily: {
         inter: ["Inter", "sans-serif"],

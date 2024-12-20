@@ -1,5 +1,3 @@
-import { Navigation } from "@/app/components/navigation";
-
 import { BlogRecipePost } from "../page";
 
 type BlogPageProps = {
@@ -16,12 +14,11 @@ async function getBlogPost(id: string): Promise<BlogRecipePost> {
 
 export default async function BlogPage({ params }: BlogPageProps) {
   const blogPost = await getBlogPost(params.id);
-  console.log(blogPost);
+  // console.log(blogPost);
   return (
     <>
-      <div className="flex justify-between pt-8 px-8">
-        <div>COOKSY</div>
-        <Navigation />
+      <div className="container mx-auto max-w-full px-4 lg:px-20 md:px-10 sm:px-5">
+        <h1>Blog</h1>
       </div>
       <div className="flex pt-10 items-center justify-center w-full max-w-4xl">
         <div className="border p-4 rounded-lg shadow-lg max-w-xl w-full">
