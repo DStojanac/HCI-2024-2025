@@ -1,5 +1,3 @@
-import { Navigation } from "@/app/components/navigation";
-
 import { BlogRecipePost } from "../page";
 
 type BlogPageProps = {
