@@ -10,6 +10,7 @@ export default function Hero() {
           alt="Table with food"
           fill
           quality={100}
+          priority
           className="object-cover brightness-100"
         />
         {/* Dark Overlay Layer */}
@@ -38,8 +39,9 @@ export default function Hero() {
           </h1>
           <p className=" md:block text-lg md:text-xl text-white/90 mb-10 max-w-xl">
             Unleash your inner chef with our diverse collection of recipes,
-            tailored for every taste and skill level. Whether you're a beginner
-            or a culinary expert, Cooksy has something special just for you!
+            tailored for every taste and skill level. Whether you&apos;re a
+            beginner or a culinary expert, Cooksy has something special just for
+            you!
           </p>
           <Link
             href={"/recipes"}
