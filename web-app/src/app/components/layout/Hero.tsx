@@ -7,7 +7,7 @@ export default function Hero() {
       <div className="absolute inset-0 z-0">
         <Image
           src="/images/Hero.jpg"
-          alt="Delicious pasta dish"
+          alt="Table with food"
           fill
           quality={100}
           className="object-cover brightness-100"
