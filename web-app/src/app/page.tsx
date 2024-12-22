@@ -1,4 +1,3 @@
-import { Save } from "lucide-react";
 import Hero from "./components/layout/Hero";
 import SaveAndOrganize from "./components/layout/SaveAndOrganize";
 import Benefits from "./components/layout/Benefits";
