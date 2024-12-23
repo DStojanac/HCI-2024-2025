@@ -3,6 +3,7 @@ import SaveAndOrganize from "./components/layout/SaveAndOrganize";
 import Benefits from "./components/layout/Benefits";
 import Testimonials from "./components/layout/Testimonials";
 import CTASection from "./components/layout/CTASection";
+import AboutSection from "./components/layout/AboutSection";
 
 export default function Home() {
   return (
@@ -20,6 +21,9 @@ export default function Home() {
 
       <div className="bg-second-background">
         <CTASection />
+      </div>
+      <div className="container mx-auto max-w-full px-4 lg:px-20 md:px-10 sm:px-5">
+        <AboutSection />
       </div>
     </main>
   );
