@@ -56,7 +56,7 @@ export default function Testimonials() {
           <div key={index} className="flex flex-col items-center text-center">
             <blockquote className="mb-8">
               <p className="text-xl xl:text-2xl font-semibold text-main-paragraph-text">
-                "{testimonial.quote}"
+                &quot;{testimonial.quote}&quot;
               </p>
             </blockquote>
             <div className="flex flex-col items-center">
