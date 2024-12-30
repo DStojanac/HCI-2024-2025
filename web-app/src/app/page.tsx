@@ -1,9 +1,9 @@
-import Hero from "./components/layout/Hero";
-import SaveAndOrganize from "./components/layout/SaveAndOrganize";
-import Benefits from "./components/layout/Benefits";
-import Testimonials from "./components/layout/Testimonials";
-import CTASection from "./components/layout/CTASection";
-import AboutSection from "./components/layout/AboutSection";
+import Hero from "../components/layout/Hero";
+import SaveAndOrganize from "../components/layout/SaveAndOrganize";
+import Benefits from "../components/layout/Benefits";
+import Testimonials from "../components/layout/Testimonials";
+import CTASection from "../components/layout/CTASection";
+import AboutSection from "../components/layout/AboutSection";
 
 export default function Home() {
   return (
