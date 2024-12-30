@@ -15,7 +15,9 @@ export default function LoginPage() {
             COOKSY
           </Link>
           <div className="flex items-center space-x-4">
-            <span className="hidden sm:block">Don't have an account? </span>
+            <span className="hidden sm:block">
+              Don&apos;t have an account?{" "}
+            </span>
             <Link
               href="/signup"
               className="text-main-btn underline underline-offset-2"
