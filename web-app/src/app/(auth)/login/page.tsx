@@ -1,8 +1,52 @@
+"use client";
+import * as z from "zod";
+
+import { useState, useTransition } from "react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoginSchema } from "@/lib/validations";
+import { FormError } from "@/components/form-error";
+import { FormSuccess } from "@/components/form-success";
+import { login } from "@/actions/login";
 
 export default function LoginPage() {
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
+
+  const [isPending, startTransition] = useTransition();
+
+  const form = useForm<z.infer<typeof LoginSchema>>({
+    resolver: zodResolver(LoginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+    setError("");
+    setSuccess("");
+
+    startTransition(() => {
+      login(values).then((data) => {
+        if (data) {
+          setError(data.error);
+        }
+      });
+    });
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
@@ -40,44 +84,59 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <label className="block text-sm" htmlFor="email">
-                Email
-              </label>
-              <Input
-                id="email"
-                placeholder="Enter your email"
-                type="email"
-                className="w-full border-input border-main-paragraph-text rounded-none focus:border-main-btn focus:ring-main-btn "
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="block text-sm">Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={isPending}
+                        placeholder="Enter your email"
+                        type="email"
+                        className="w-full border-input border-main-paragraph-text rounded-none focus:border-main-btn focus:ring-main-btn"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-navigation-text" />
+                  </FormItem>
+                )}
               />
-            </div>
 
-            <div className="space-y-2">
-              <label className="block text-sm" htmlFor="password">
-                Password
-              </label>
-              <Input
-                id="password"
-                placeholder="Enter your password"
-                type="password"
-                className="w-full border-input border-main-paragraph-text rounded-none focus:border-main-btn focus:ring-main-btn "
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="block text-sm">Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={isPending}
+                        placeholder="********"
+                        type="password"
+                        className="w-full border-input border-main-paragraph-text rounded-none focus:border-main-btn focus:ring-main-btn"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-navigation-text" />
+                  </FormItem>
+                )}
               />
-            </div>
 
-            <Button className="w-full bg-main-btn hover:bg-second-btn text-white py-6">
-              Log In
-            </Button>
-
-            {/* <div className="text-center">
-              <Link
-                href="/forgot-password"
-                className="text-sm text-muted-foreground hover:text-main-btn"
+              <FormError message={error} />
+              <FormSuccess message={success} />
+              <Button
+                disabled={isPending}
+                type="submit"
+                className="w-full bg-main-btn hover:bg-second-btn text-white py-6"
               >
-                Forgot your password?
-              </Link>
-            </div> */}
-          </div>
+                Log In
+              </Button>
+            </form>
+          </Form>
 
           <div className="text-center text-sm text-muted-foreground mt-8">
             © 2024 Cooksy
