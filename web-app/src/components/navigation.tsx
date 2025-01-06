@@ -3,8 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
-import { X } from "lucide-react";
-
+import { X, User  } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { logout } from "@/actions/logout";
+import type { Session } from "next-auth";
 type Page = {
   title: string;
   path: `/${string}`;
@@ -32,6 +34,14 @@ const pages: Page[] = [
     title: "Sign Up",
     path: "/signup",
   },
+  {
+    title: "Account",
+    path: "/account",
+  },
+  {
+    title:"Sign Out",
+    path:"/",
+  }
 ];
 
 function Hamburger({ onClick }: { onClick: () => void }) {
@@ -48,10 +58,38 @@ function Hamburger({ onClick }: { onClick: () => void }) {
   );
 }
 
-function processPage(page: Page, index: number, pathName: string) {
+function processPage(page: Page, index: number, pathName: string, session: Session | null, status: string) {
   const isLogin = page.path === "/login";
   const isSignUp = page.path === "/signup";
   const isActive = page.path === pathName;
+  const isAccount = page.path === "/account";
+  const isSignOut = page.title === "Sign Out";
+  
+  const signOut = () => {
+    logout()
+  }
+
+  if (isSignOut && status === "authenticated" && session?.user) {
+    return (
+      <li key={index}>
+        <button onClick={signOut} type="submit" className="bg-main-btn text-white px-5 py-2.5 border border-main-background rounded-md hover:bg-second-btn w-full block text-center">Sign Out</button>
+      </li>
+    )
+  }
+
+  if (status === "authenticated" && (isLogin || isSignUp) || status === "unauthenticated" && isAccount || status === "unauthenticated" && isSignOut) {
+    return null
+  }
+
+  if (status === "authenticated" && isAccount){
+    return (
+      <li key={index}>
+        <Link href={page.path} className="rounded-full border-2 border-black bg-black p-1 flex items-center justify-center">
+          <User />
+        </Link>
+      </li>
+    )
+  }
 
   return (
     <li className="hover:text-navigation-text" key={index}>
@@ -66,12 +104,12 @@ function processPage(page: Page, index: number, pathName: string) {
               : ""
           }
         ${
-          isLogin
+          isLogin 
             ? "text-second-paragraph-text border border-second-paragraph-text px-5 py-2.5 rounded-md hover:bg-gray-100 w-full block text-center"
             : ""
         }
         ${
-          isSignUp
+          isSignUp 
             ? "bg-main-btn text-white px-5 py-2.5 border border-main-background rounded-md hover:bg-second-btn w-full block text-center"
             : ""
         }
@@ -84,6 +122,7 @@ function processPage(page: Page, index: number, pathName: string) {
 }
 
 export function Navigation() {
+  const { data: session, status } = useSession()
   const pathName = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -129,7 +168,7 @@ export function Navigation() {
     <nav className="relative">
       {/* Desktop Navigation */}
       <ul className="hidden md:flex md:space-x-4 lg:space-x-9 text-sm md:text-base items-center">
-        {pages.map((page, index) => processPage(page, index, pathName))}
+        {pages.map((page, index) => processPage(page, index, pathName, session, status))}
       </ul>
 
       {/* Mobile Navigation */}
@@ -190,7 +229,7 @@ export function Navigation() {
             {/* Auth Buttons */}
             <ul className="mt-auto space-y-4 mb-8">
               {authLinks.map((page, index) =>
-                processPage(page, index, pathName)
+                processPage(page, index, pathName, session, status)
               )}
             </ul>
           </div>

@@ -1,4 +1,4 @@
-import { Navigation } from "@/app/components/navigation";
+import { Navigation } from "@/components/navigation";
 import Link from "next/link";
 
 export default function Header() {
