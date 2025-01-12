@@ -30,8 +30,9 @@
 - Link to Assignment 3: [**Assignment 3**](https://hci-2024-2025.vercel.app/) <!-- Replace with actual URL -->
 - Link to Assignment 4: [**Assignment 4**](https://github.com/DStojanac/HCI-2024-2025/blob/main/assignments/assignment_4/High-fidelity-model.png) <!-- Replace with actual URL -->
 - Link to Assignment 5: [**Assignment 5**](https://hci-2024-2025.vercel.app/blog) <!-- Replace with actual URL -->
-- Link to Assignment 6: [**Assignment 6**](https://hci-2024-2025.vercel.app/) <!-- Replace with actual URL -->
-
+- Link to Assignment 6: - [**Landing Page**](https://hci-2024-2025.vercel.app/) <!-- Replace with actual URL -->
+                        - [**Mobile High Fidelity Prototype**](https://github.com/DStojanac/HCI-2024-2025/blob/main/assignments/assignment_6/Mobile-high-fidelity-model.png)
+                        - [**Desktop High Fidelity Prototype**](https://github.com/DStojanac/HCI-2024-2025/blob/main/assignments/assignment_6/Desktop-high-fidelity-model.png)
 <!-- Add more assignments as necessary -->
 
 ## Project Requirements
