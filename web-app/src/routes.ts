@@ -2,7 +2,7 @@
  * An array of routes that are accessible to public
  * These routes do not require authentication
  */
-export const publicRoutes = ["/", "/about", "/recipes", "/blog"];
+export const publicRoutes = ["/", "/about", "/recipes", "/blog", "/recipes/*"];
 
 /**
  * An array of routes that are used for authentication

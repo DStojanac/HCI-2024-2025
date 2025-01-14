@@ -84,7 +84,7 @@ function processPage(page: Page, index: number, pathName: string, session: Sessi
   if (status === "authenticated" && isAccount){
     return (
       <li key={index}>
-        <Link href={page.path} className="rounded-full border-2 border-black bg-black p-1 flex items-center justify-center">
+        <Link href={page.path} className="rounded-full border-2 p-1 flex items-center justify-center">
           <User />
         </Link>
       </li>
@@ -158,10 +158,10 @@ export function Navigation() {
   }, []);
 
   const navigationLinks = pages.filter(
-    (page) => page.path !== "/login" && page.path !== "/signup"
+    (page) => page.path !== "/login" && page.path !== "/signup" && page.path !== "/account" && page.title !== "Sign Out"
   );
   const authLinks = pages.filter(
-    (page) => page.path === "/login" || page.path === "/signup"
+    (page) => page.path === "/login" || page.path === "/signup" || page.path === "/account" || page.title === "Sign Out"
   );
 
   return (
