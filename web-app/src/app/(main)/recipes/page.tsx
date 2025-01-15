@@ -1,18 +1,18 @@
-import Image from "next/image"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Card,  CardFooter, CardHeader } from "@/components/ui/card"
+import Image from "next/image";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { Badge } from "@/components/ui/badge"
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import { Heart, Search, Clock, ChefHat, Star } from 'lucide-react'
-import Link from "next/link"
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Heart, Search, Clock, ChefHat, Star } from "lucide-react";
+import Link from "next/link";
 
 export type recipePost = {
   id: number;
@@ -39,22 +39,21 @@ async function getBlogPosts(): Promise<recipePost[]> {
   return data.recipes;
 }
 
-  
-
-
 export default async function RecipesPage() {
   const recipes: recipePost[] = await getBlogPosts();
   return (
-    <div className="container mx-auto px-4 py-8 bg-main-background">
+    <div className="container mx-auto px-4 py-10 bg-main-background">
       {/* Search and Filters Section */}
       <div className="text-main-paragraph-text space-y-6 mb-8">
-        {/*<h1 className="text-4xl font-bold text-center mb-8">Discover Recipes</h1>*/}
+        <h1 className="text-4xl font-bold text-center mb-8">
+          Discover Recipes
+        </h1>
         {/* Search Bar */}
         <div className="relative max-w-2xl mx-auto bg-main-background ">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <Input
             placeholder="Search recipes..."
-            className="pl-10 h-12 rounded-full"
+            className="pl-10 h-12 rounded-full focus:ring-second-btn shadow-lg"
           />
         </div>
 
@@ -62,41 +61,114 @@ export default async function RecipesPage() {
         <div className="text-main-paragraph-text border shadow-md flex flex-col md:flex-row gap-4 items-center justify-between bg-muted/50 p-4 rounded-2xl">
           <div className="flex flex-wrap gap-4 items-center bg-main-background">
             <Select>
-              <SelectTrigger className="w-[160px]">
+              <SelectTrigger className="w-[160px] border border-second-btn focus:ring-0 focus:border-second-btn">
                 <SelectValue placeholder="Cuisine Type" />
               </SelectTrigger>
               <SelectContent className="bg-main-background">
-                <SelectItem value="italian">Italian</SelectItem>
-                <SelectItem value="mexican">Mexican</SelectItem>
-                <SelectItem value="indian">Indian</SelectItem>
-                <SelectItem value="chinese">Chinese</SelectItem>
+                <SelectItem
+                  value="all"
+                  className="hover:bg-second-background cursor-pointer"
+                >
+                  All
+                </SelectItem>
+                <SelectItem
+                  value="italian"
+                  className="hover:bg-second-background cursor-pointer"
+                >
+                  Italian
+                </SelectItem>
+                <SelectItem
+                  value="mexican"
+                  className="hover:bg-second-background cursor-pointer"
+                >
+                  Mexican
+                </SelectItem>
+                <SelectItem
+                  value="indian"
+                  className="hover:bg-second-background cursor-pointer"
+                >
+                  Indian
+                </SelectItem>
+                <SelectItem
+                  value="chinese"
+                  className="hover:bg-second-background cursor-pointer"
+                >
+                  Chinese
+                </SelectItem>
               </SelectContent>
             </Select>
 
             <Select>
-              <SelectTrigger className="w-[160px]">
+              <SelectTrigger className="w-[160px] border border-second-btn focus:ring-0 focus:border-second-btn">
                 <SelectValue placeholder="Cooking Time" />
               </SelectTrigger>
               <SelectContent className="bg-main-background">
-                <SelectItem value="15">Under 15 mins</SelectItem>
-                <SelectItem value="30">Under 30 mins</SelectItem>
-                <SelectItem value="60">Under 1 hour</SelectItem>
+                <SelectItem
+                  value="all"
+                  className="hover:bg-second-background cursor-pointer"
+                >
+                  All
+                </SelectItem>
+                <SelectItem
+                  value="15"
+                  className="hover:bg-second-background cursor-pointer"
+                >
+                  Under 15 mins
+                </SelectItem>
+                <SelectItem
+                  value="30"
+                  className="hover:bg-second-background cursor-pointer"
+                >
+                  Under 30 mins
+                </SelectItem>
+                <SelectItem
+                  value="60"
+                  className="hover:bg-second-background cursor-pointer"
+                >
+                  Under 1 hour
+                </SelectItem>
               </SelectContent>
             </Select>
 
             <Select>
-              <SelectTrigger className="w-[160px]">
+              <SelectTrigger className="w-[160px] border border-second-btn focus:ring-0 focus:border-second-btn">
                 <SelectValue placeholder="Difficulty" />
               </SelectTrigger>
               <SelectContent className="bg-main-background">
-                <SelectItem value="easy">Easy</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="hard">Hard</SelectItem>
+                <SelectItem
+                  value="all"
+                  className="hover:bg-second-background cursor-pointer"
+                >
+                  All
+                </SelectItem>
+                <SelectItem
+                  value="easy"
+                  className="hover:bg-second-background cursor-pointer"
+                >
+                  Easy
+                </SelectItem>
+                <SelectItem
+                  value="medium"
+                  className="hover:bg-second-background cursor-pointer"
+                >
+                  Medium
+                </SelectItem>
+                <SelectItem
+                  value="hard"
+                  className="hover:bg-second-background cursor-pointer"
+                >
+                  Hard
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          <Button variant="outline">Clear Filters</Button>
+          <Button
+            variant="outline"
+            className=" border border-second-btn focus:ring-0 focus:border-second-btn hover:bg-second-background"
+          >
+            Clear Filters
+          </Button>
         </div>
 
         {/* Categories */}
@@ -133,26 +205,33 @@ export default async function RecipesPage() {
                 src={recipe.image}
                 alt={recipe.name}
                 fill
-                className= "object-cover"
+                className="object-cover"
               />
               <Button
                 variant="ghost"
                 size="icon"
-                className="absolute top-2 right-2 bg-main-background hover:bg-white/90 rounded-full"
+                className="absolute top-2 right-2 bg-main-background  rounded-full  hover:bg-second-background"
               >
                 <Heart className="h-7 w-7" />
               </Button>
             </div>
             <CardHeader className="space-y-1">
               <div className="flex justify-between items-start">
-                <h3 className="font-semibold text-lg line-clamp-1">{recipe.name}</h3>
-                <Badge variant="secondary" className="bg-second-background rounded-full ml-2">
+                <h3 className="font-semibold text-lg line-clamp-1">
+                  {recipe.name}
+                </h3>
+                <Badge
+                  variant="secondary"
+                  className="bg-second-background rounded-full ml-2"
+                >
                   {recipe.mealType[0]}
                 </Badge>
               </div>
               <div className="text-second-paragraph-text flex items-center gap-2 text-muted-foreground">
                 <Clock className="h-4 w-4" />
-                <span className="text-sm">{recipe.prepTimeMinutes+recipe.cookTimeMinutes} mins</span>
+                <span className="text-sm">
+                  {recipe.prepTimeMinutes + recipe.cookTimeMinutes} mins
+                </span>
                 <ChefHat className="h-4 w-4 ml-2" />
                 <span className="text-sm">{recipe.difficulty}</span>
               </div>
@@ -173,17 +252,24 @@ export default async function RecipesPage() {
                   ({recipe.reviewCount})
                 </span>
               </div>
-              <Link href={"/recipes/" + recipe.id.toString()} className="font-medium text-second-paragraph-text">
-              <Button variant="ghost" size="sm" className="hover:bg-second-background font-medium text-second-paragraph-text">
-                View Recipe
-              </Button>
+              <Link
+                href={"/recipes/" + recipe.id.toString()}
+                className="font-medium text-second-paragraph-text"
+              >
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="hover:bg-second-background font-medium text-second-paragraph-text"
+                >
+                  View Recipe
+                </Button>
               </Link>
             </CardFooter>
           </Card>
         ))}
       </div>
     </div>
-  )
+  );
 }
 
 const categories = [
@@ -195,4 +281,4 @@ const categories = [
   { name: "Salads", image: "/placeholder.svg" },
   { name: "Snacks", image: "/placeholder.svg" },
   { name: "Beverages", image: "/placeholder.svg" },
-]
+];
