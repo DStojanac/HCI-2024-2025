@@ -7,6 +7,10 @@ export default async function DashboardPage() {
       <main className="container mx-auto max-w-full px-4 lg:px-20 md:px-10 sm:px-5">
         <h1>DASHBOARD PAGE</h1>
         <h1>{JSON.stringify(session)}</h1>
+        <h1>{session?.user.name}</h1>
+        <h1>{session?.user.email}</h1>
+        <h1>{session?.user.role}</h1>
+
         <form
           action={async () => {
             "use server";
@@ -22,5 +26,3 @@ export default async function DashboardPage() {
     </>
   );
 }
-
-//2:49:41
