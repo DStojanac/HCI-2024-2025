@@ -1,13 +1,13 @@
 import { defineType, defineField } from "sanity";
 
-export const recipes = defineType({
-  name: "recipes",
-  title: "Recipes",
+export const recipe = defineType({
+  name: "recipe",
+  title: "Recipe",
   type: "document",
   fields: [
     defineField({
       name: "title",
-      title: "Recipe Title",
+      title: "Title",
       type: "string",
       validation: (Rule) => Rule.required().min(3).max(80),
     }),
@@ -40,13 +40,13 @@ export const recipes = defineType({
       name: "cookingTime",
       title: "Cooking Time",
       type: "number",
-      validation: (Rule) => Rule.required().min(1),
+      validation: (Rule) => Rule.required().positive().min(1),
     }),
     defineField({
       name: "servings",
       title: "Servings",
       type: "number",
-      validation: (Rule) => Rule.required().min(1),
+      validation: (Rule) => Rule.required().positive().min(1),
     }),
     defineField({
       name: "difficulty",
@@ -73,13 +73,13 @@ export const recipes = defineType({
               name: "amount",
               title: "Amount",
               type: "string",
-              validation: (Rule) => Rule.required(),
+              validation: (Rule) => Rule.required().min(1),
             },
             {
               name: "item",
               title: "Item",
               type: "string",
-              validation: (Rule) => Rule.required(),
+              validation: (Rule) => Rule.required().min(1),
             },
           ],
         },
@@ -102,7 +102,7 @@ export const recipes = defineType({
           name: "calories",
           title: "Calories",
           type: "number",
-          validation: (Rule) => Rule.required(),
+          validation: (Rule) => Rule.required().positive().min(1),
         },
         {
           name: "protein",
@@ -126,13 +126,50 @@ export const recipes = defineType({
         },
       ],
     }),
-    // defineField({
-    //   name: "author",
-    //   title: "Author",
-    //   type: "reference",
-    //   to: [{ type: "author" }],
-    //   validation: (Rule) => Rule.required(),
-    // }),
+    defineField({
+      name: "cuisineType",
+      title: "Cuisine Type",
+      type: "string",
+      options: {
+        list: [
+          { title: "Croatian", value: "croatian" },
+          { title: "Italian", value: "italian" },
+          { title: "Chinese", value: "chinese" },
+          { title: "Mexican", value: "mexican" },
+          { title: "Indian", value: "indian" },
+          { title: "American", value: "american" },
+        ],
+      },
+      validation: (Rule) => Rule.required(),
+    }),
+
+    defineField({
+      name: "mealType",
+      title: "Meal Type",
+      type: "string",
+      options: {
+        list: [
+          { title: "Dinner", value: "dinner" },
+          { title: "Lunch", value: "lunch" },
+          { title: "Snack", value: "snack" },
+          { title: "Appetizer", value: "appetizer" },
+          { title: "Breakfast", value: "breakfast" },
+          { title: "Beverage", value: "beverage" },
+          { title: "Dessert", value: "dessert" },
+          { title: "Vegeterian", value: "vegeterian" },
+          { title: "Salad", value: "salad" },
+          { title: "Soup", value: "soup" },
+        ],
+      },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: "author",
+      title: "Author",
+      type: "reference",
+      to: [{ type: "author" }],
+      validation: (Rule) => Rule.required(),
+    }),
 
     defineField({
       name: "status",
@@ -149,7 +186,17 @@ export const recipes = defineType({
   ],
   preview: {
     select: {
-      title: "name",
+      title: "title",
+      image: "mainImage",
+      status: "status",
+    },
+    prepare(selection) {
+      const { title, image, status } = selection;
+      return {
+        title,
+        subtitle: status,
+        media: image,
+      };
     },
   },
 });
