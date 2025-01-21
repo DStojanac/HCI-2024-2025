@@ -13,34 +13,18 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Heart, Search, Clock, ChefHat, Star } from "lucide-react";
 import Link from "next/link";
+import { RECIPE_QUERY } from "@/sanity/lib/queries";
+import { client } from "@/sanity/lib/client";
+import { urlFor } from "@/sanity/lib/image";
 
-export type recipePost = {
-  id: number;
-  name: string;
-  ingredients: string[];
-  instructions: string[];
-  prepTimeMinutes: number;
-  cookTimeMinutes: number;
-  servings: number;
-  difficulty: "Easy" | "Medium" | "Hard";
-  cuisine: string;
-  caloriesPerServing: number;
-  tags: string[];
-  userId: number;
-  image: string;
-  rating: number;
-  reviewCount: number;
-  mealType: string[];
-};
 
-async function getBlogPosts(): Promise<recipePost[]> {
-  const response = await fetch(`${process.env.BASE_API_URL}/recipes`);
-  const data = await response.json();
-  return data.recipes;
+async function getRecipes() {
+  const recipes = await client.fetch(RECIPE_QUERY);
+  return recipes;
 }
 
 export default async function RecipesPage() {
-  const recipes: recipePost[] = await getBlogPosts();
+  const recipes = await getRecipes();
   return (
     <div className="container mx-auto px-4 py-10 bg-main-background">
       {/* Search and Filters Section */}
@@ -94,6 +78,18 @@ export default async function RecipesPage() {
                   className="hover:bg-second-background cursor-pointer"
                 >
                   Chinese
+                </SelectItem>
+                <SelectItem
+                  value="chinese"
+                  className="hover:bg-second-background cursor-pointer"
+                >
+                  Croatian
+                </SelectItem>
+                <SelectItem
+                  value="chinese"
+                  className="hover:bg-second-background cursor-pointer"
+                >
+                  American
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -185,14 +181,14 @@ export default async function RecipesPage() {
                     src={category.image}
                     alt={category.name}
                     fill
-                    className="bg-black object-cover"
+                    className="object-cover"
                   />
                 </div>
                 <span className="text-sm font-medium">{category.name}</span>
               </Button>
             ))}
           </div>
-          <ScrollBar orientation="horizontal" />
+          <ScrollBar orientation="horizontal"/>
         </ScrollArea>
       </div>
 
@@ -202,8 +198,8 @@ export default async function RecipesPage() {
           <Card key={index} className="overflow-hidden">
             <div className="relative aspect-[4/3]">
               <Image
-                src={recipe.image}
-                alt={recipe.name}
+                src={urlFor(recipe.mainImage).url()}
+                alt={recipe.title}
                 fill
                 className="object-cover"
               />
@@ -218,26 +214,26 @@ export default async function RecipesPage() {
             <CardHeader className="space-y-1">
               <div className="flex justify-between items-start">
                 <h3 className="font-semibold text-lg line-clamp-1">
-                  {recipe.name}
+                  {recipe.title}
                 </h3>
                 <Badge
                   variant="secondary"
                   className="bg-second-background rounded-full ml-2"
                 >
-                  {recipe.mealType[0]}
+                  {recipe.mealType}
                 </Badge>
               </div>
               <div className="text-second-paragraph-text flex items-center gap-2 text-muted-foreground">
                 <Clock className="h-4 w-4" />
                 <span className="text-sm">
-                  {recipe.prepTimeMinutes + recipe.cookTimeMinutes} mins
+                  {recipe.cookingTime} mins
                 </span>
                 <ChefHat className="h-4 w-4 ml-2" />
                 <span className="text-sm">{recipe.difficulty}</span>
               </div>
             </CardHeader>
             <CardFooter className="flex justify-between items-center">
-              <div className="flex items-center gap-1">
+              {/* <div className="flex items-center gap-1">
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
@@ -251,11 +247,12 @@ export default async function RecipesPage() {
                 <span className="text-second-paragraph-text text-muted-foreground ml-2">
                   ({recipe.reviewCount})
                 </span>
-              </div>
+              </div> */}
               <Link
-                href={"/recipes/" + recipe.id.toString()}
+                href={"/recipes/" + recipe._id}
                 className="font-medium text-second-paragraph-text"
               >
+                
                 <Button
                   variant="ghost"
                   size="sm"
@@ -273,12 +270,14 @@ export default async function RecipesPage() {
 }
 
 const categories = [
-  { name: "Breakfast", image: "/placeholder.svg" },
-  { name: "Main Course", image: "/placeholder.svg" },
-  { name: "Desserts", image: "/placeholder.svg" },
-  { name: "Vegetarian", image: "/placeholder.svg" },
-  { name: "Soups", image: "/placeholder.svg" },
-  { name: "Salads", image: "/placeholder.svg" },
-  { name: "Snacks", image: "/placeholder.svg" },
-  { name: "Beverages", image: "/placeholder.svg" },
+  { name: "Breakfast", image: "/images/meal-type/breakfast.jpg" },
+  { name: "Lunch", image: "/images/meal-type/lunch.jpg" },
+  { name: "Dinner", image: "/images/meal-type/dinner.jpg" },
+  { name: "Vegetarian", image: "/images/meal-type/vegetarian.png" },
+  { name: "Soup", image: "/images/meal-type/soup.jpg" },
+  { name: "Salad", image: "/images/meal-type/salad.png" },
+  { name: "Snack", image: "/images/meal-type/snack.png" },
+  { name: "Beverage", image: "/images/meal-type/beverage.png" },
+  { name: "Appetizer", image: "/images/meal-type/appetizer.png" },
+  { name: "Dessert", image: "/images/meal-type/dessert.png" },
 ];
