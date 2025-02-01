@@ -1,7 +1,7 @@
 import { defineQuery } from "next-sanity";
 
 export const RECIPE_QUERY = defineQuery(
-`*[_type== "recipe" && status=="published" && defined(slug.current)]{
+  `*[_type== "recipe" && status=="published" && defined(slug.current)]{
   _id,
   title,
   "mainImage": mainImage.asset->url,
@@ -12,7 +12,7 @@ export const RECIPE_QUERY = defineQuery(
   ingredients,
   instructions,
   nutrition,
-  cuisine,
+  cuisineType,
   mealType,
   author->{
   supabaseUserId,
@@ -36,4 +36,4 @@ export const RECIPE_ID_QUERY = defineQuery(
     mealType,
     author->{ name }
   }`
-)
+);
