@@ -73,7 +73,6 @@ export const recipe = defineType({
               name: "amount",
               title: "Amount",
               type: "string",
-              validation: (Rule) => Rule.required().min(1),
             },
             {
               name: "item",
