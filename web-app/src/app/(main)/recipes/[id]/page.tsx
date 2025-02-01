@@ -3,16 +3,26 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Clock, Users, ChefHat, Heart, Star } from "lucide-react";
+import { Clock, Users, ChefHat, Heart } from "lucide-react";
 import { RECIPE_ID_QUERY } from "@/sanity/lib/queries";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
+import { RECIPE_ID_QUERYResult } from "../../../../../sanity.types";
+import NotFound from "@/app/not-found";
 
+export default async function RecipePage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const id = (await params).id;
+  const recipe: RECIPE_ID_QUERYResult = await client.fetch(RECIPE_ID_QUERY, {
+    id,
+  });
 
-
-export default async function RecipePage({params}: {params: Promise<{ id: string }>}) {
-  const id=(await params).id;
-  const recipe=await client.fetch(RECIPE_ID_QUERY, {id});
+  if (!recipe) {
+    return <NotFound />;
+  }
 
   return (
     <div className="bg-main-background container mx-auto px-12 py-10 xl:px-20">
@@ -21,8 +31,12 @@ export default async function RecipePage({params}: {params: Promise<{ id: string
         <div className="space-y-6">
           <div className="relative aspect-video rounded-lg overflow-hidden">
             <Image
-              src={urlFor(recipe.mainImage).url()}
-              alt={recipe.title}
+              src={
+                recipe && recipe.mainImage
+                  ? urlFor(recipe.mainImage).url()
+                  : "/placeholder.svg"
+              }
+              alt={recipe && recipe.title ? recipe.title : "Recipe Image"}
               fill
               className="object-cover"
             />
@@ -103,26 +117,32 @@ export default async function RecipePage({params}: {params: Promise<{ id: string
             <TabsContent value="ingredients">
               <Card className="border-second-paragraph-text">
                 <CardContent className="pt-6 ">
-                   <ul className="list-disc list-inside space-y-2 text-main-paragraph-text">
-                   {recipe.ingredients.map((ingredient, index) => (
-                  <li key={ingredient._key}>
-                    {ingredient.amount} {ingredient.item}
-                  </li>
-                ))}
-                  </ul> 
+                  <ul className="list-disc list-inside space-y-2 text-main-paragraph-text">
+                    {recipe.ingredients &&
+                      recipe.ingredients.map((ingredient) => (
+                        <li key={ingredient._key}>
+                          {ingredient.amount &&
+                          !ingredient.amount.startsWith("0")
+                            ? `${ingredient.amount}`
+                            : ""}{" "}
+                          {ingredient.item}
+                        </li>
+                      ))}
+                  </ul>
                 </CardContent>
               </Card>
             </TabsContent>
             <TabsContent value="instructions">
               <Card className="border-second-paragraph-text">
                 <CardContent className="pt-6 border-second-paragraph-text">
-                   <ol className="list-decimal list-inside space-y-4 text-main-paragraph-text">
-                    {recipe.instructions.map((step, index) => (
-                      <li key={index} className="pl-2">
-                        {step}
-                      </li>
-                    ))}
-                  </ol> 
+                  <ol className="list-decimal list-inside space-y-4 text-main-paragraph-text">
+                    {recipe.instructions &&
+                      recipe.instructions.map((step, index) => (
+                        <li key={index} className="pl-2">
+                          {step}
+                        </li>
+                      ))}
+                  </ol>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -136,7 +156,9 @@ export default async function RecipePage({params}: {params: Promise<{ id: string
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
           <Card>
             <CardContent className="p-4 text-center">
-              <p className="text-lg font-medium">{recipe.nutrition.calories}</p>
+              <p className="text-lg font-medium">
+                {recipe.nutrition?.calories ?? "N/A"}
+              </p>
               <p className="text-sm text-muted-foreground capitalize">
                 Calories
               </p>
@@ -144,19 +166,25 @@ export default async function RecipePage({params}: {params: Promise<{ id: string
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <p className="text-lg font-medium">{recipe.nutrition.fat}</p>
+              <p className="text-lg font-medium">
+                {recipe.nutrition?.fat ?? "N/A"}
+              </p>
               <p className="text-sm text-muted-foreground capitalize">Fat</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <p className="text-lg font-medium">{recipe.nutrition.carbs}</p>
+              <p className="text-lg font-medium">
+                {recipe.nutrition?.carbs ?? "N/A"}
+              </p>
               <p className="text-sm text-muted-foreground capitalize">Carbs</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <p className="text-lg font-medium">{recipe.nutrition.protein}</p>
+              <p className="text-lg font-medium">
+                {recipe.nutrition?.protein ?? "N/A"}
+              </p>
               <p className="text-sm text-muted-foreground capitalize">
                 Protein
               </p>
@@ -164,7 +192,9 @@ export default async function RecipePage({params}: {params: Promise<{ id: string
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <p className="text-lg font-medium">{recipe.nutrition.fiber}</p>
+              <p className="text-lg font-medium">
+                {recipe.nutrition?.fiber ?? "N/A"}
+              </p>
               <p className="text-sm text-muted-foreground capitalize">Fiber</p>
             </CardContent>
           </Card>
@@ -176,14 +206,16 @@ export default async function RecipePage({params}: {params: Promise<{ id: string
         <div className="relative w-16 h-16 rounded-full overflow-hidden">
           <Image
             src="/placeholder.svg"
-            alt={recipe.author.name}
+            alt={recipe.author?.name ?? "Unknown Author"}
             fill
             className="object-cover"
           />
         </div>
         <div>
           <p>Recipe by</p>
-          <p className="text-lg font-semibold">{recipe.author.name}</p>
+          <p className="text-lg font-semibold">
+            {recipe.author?.name ?? "Unknown Author"}
+          </p>
         </div>
       </div>
     </div>
