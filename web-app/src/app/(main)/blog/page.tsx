@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export type BlogRecipePost = {
   id: number;
@@ -31,19 +32,18 @@ export default async function BlogPostsPage() {
 
   return (
     <>
-      <div className="container mx-auto max-w-full px-4 lg:px-20 md:px-10 sm:px-5">
-        <h1>Blog Page</h1>
-      </div>
       <h1 className="flex justify-center text-4xl p-5">BLOG POSTS </h1>
 
       <div className="flex justify-center ">
         <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 ">
           {blogPosts.map((post) => (
             <div key={post.id} className="border p-4 max-w-sm w-full">
-              <img
+              <Image
+                width={300}
+                height={200}
                 src={post.image}
                 alt={post.name}
-                className="w-full h-32 object-cover"
+                className="w-full  "
               />
               <h2 className="text-xl font-bold">{post.name}</h2>
               <p>{post.ingredients.join(", ")}</p>
