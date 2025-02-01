@@ -21,14 +21,15 @@ import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { signup } from "@/actions/signup";
 import { useRouter } from "next/navigation";
+import { ClipLoader } from "react-spinners";
 
 export default function SignUpPage() {
   const router = useRouter();
 
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
-
   const [isPending, startTransition] = useTransition();
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof SignUpSchema>>({
     resolver: zodResolver(SignUpSchema),
@@ -42,6 +43,7 @@ export default function SignUpPage() {
   const onSubmit = (values: z.infer<typeof SignUpSchema>) => {
     setError("");
     setSuccess("");
+    setIsLoading(false);
 
     startTransition(() => {
       signup(values).then((data) => {
@@ -49,11 +51,10 @@ export default function SignUpPage() {
           return setError(data.error);
         }
         if (data.success) {
-          setSuccess(data.success);
+          // setSuccess(data.success);
 
-          setTimeout(() => {
-            router.push("/login");
-          }, 1500);
+          setIsLoading(true);
+          router.push("/login");
         }
       });
     });
@@ -156,8 +157,13 @@ export default function SignUpPage() {
               />
               <FormError message={error} />
               <FormSuccess message={success} />
+              {isLoading && (
+                <div className="flex justify-center">
+                  <ClipLoader size={35} color="#A4330D" loading={isLoading} />
+                </div>
+              )}
               <Button
-                disabled={isPending}
+                disabled={isLoading}
                 type="submit"
                 className="w-full bg-main-btn hover:bg-second-btn text-white py-6"
               >

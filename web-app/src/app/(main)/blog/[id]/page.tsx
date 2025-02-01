@@ -1,10 +1,5 @@
 import { BlogRecipePost } from "../page";
-
-type BlogPageProps = {
-  params: {
-    id: string;
-  };
-};
+import Image from "next/image";
 
 async function getBlogPost(id: string): Promise<BlogRecipePost> {
   const response = await fetch(`${process.env.BASE_API_URL}/recipes/${id}`);
@@ -12,20 +7,24 @@ async function getBlogPost(id: string): Promise<BlogRecipePost> {
   return data;
 }
 
-export default async function BlogPage({ params }: BlogPageProps) {
-  const blogPost = await getBlogPost(params.id);
+export default async function BlogPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const id = (await params).id;
+  const blogPost = await getBlogPost(id);
   // console.log(blogPost);
   return (
     <>
-      <div className="container mx-auto max-w-full px-4 lg:px-20 md:px-10 sm:px-5">
-        <h1>Blog</h1>
-      </div>
-      <div className="flex pt-10 items-center justify-center w-full max-w-4xl">
+      <div className="flex pt-10 items-center justify-center w-full max-w-4xl mb-8">
         <div className="border p-4 rounded-lg shadow-lg max-w-xl w-full">
-          <img
+          <Image
+            width={300}
+            height={200}
             src={blogPost.image}
             alt={blogPost.name}
-            className="w-full h-40 object-cover rounded-t-lg"
+            className="w-full   rounded-t-lg"
           />
           <h1 className="text-4xl font-extrabold tracking-tight text-center mt-4">
             {blogPost.name}

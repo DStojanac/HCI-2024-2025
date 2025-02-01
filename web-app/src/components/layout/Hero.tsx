@@ -9,7 +9,6 @@ export default function Hero() {
           src="/images/Hero.jpg"
           alt="Table with food"
           fill
-          quality={100}
           priority
           className="object-cover brightness-100"
         />
