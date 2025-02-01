@@ -1,18 +1,19 @@
 import React from "react";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
-import { SessionProvider } from "next-auth/react"
+import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 const Layout = async ({ children }: { children: React.ReactNode }) => {
-  const session=await auth()
+  const session = await auth();
   return (
     <div>
       <main>
         <SessionProvider session={session}>
-        <Header />
-        {children}
-        <Footer />
+          <Header />
+          <NuqsAdapter>{children}</NuqsAdapter>
+          <Footer />
         </SessionProvider>
       </main>
     </div>
