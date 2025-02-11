@@ -2,7 +2,6 @@
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -10,13 +9,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Heart, Search, Clock, ChefHat } from "lucide-react";
-import Link from "next/link";
-import { urlFor } from "@/sanity/lib/image";
+import { Search } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { RECIPE_QUERYResult } from "../../sanity.types";
+import Recipe from "./recipe";
 
 export function RecipesClient({
   initialRecipes,
@@ -80,7 +77,6 @@ export function RecipesClient({
     setCookingTime("all");
     setDifficulty("all");
   };
-
   return (
     <div className="container mx-auto px-4 py-10 bg-main-background">
       {/* Search and Filters Section */}
@@ -96,8 +92,7 @@ export function RecipesClient({
             placeholder="Search recipes..."
             className="pl-10 h-12 rounded-full focus:ring-second-btn shadow-lg"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+            onChange={(e) => setSearchTerm(e.target.value)} />
         </div>
 
         {/* Filters */}
@@ -234,26 +229,20 @@ export function RecipesClient({
               <Button
                 key={cat.name}
                 variant="ghost"
-                className={`flex flex-col items-center gap-2 h-auto p-4 ${
-                  category === cat.name.toLowerCase()
+                className={`flex flex-col items-center gap-2 h-auto p-4 ${category === cat.name.toLowerCase()
                     ? "bg-second-background"
-                    : "hover:bg-second-background"
-                }`}
-                onClick={() =>
-                  setCategory((prevCategory) =>
-                    prevCategory === cat.name.toLowerCase()
-                      ? "all"
-                      : cat.name.toLowerCase()
-                  )
-                }
+                    : "hover:bg-second-background"}`}
+                onClick={() => setCategory((prevCategory) => prevCategory === cat.name.toLowerCase()
+                  ? "all"
+                  : cat.name.toLowerCase()
+                )}
               >
                 <div className="relative w-16 h-16 rounded-full overflow-hidden">
                   <Image
                     src={cat.image || "/placeholder.svg"}
                     alt={cat.name}
                     fill
-                    className="object-cover"
-                  />
+                    className="object-cover" />
                 </div>
                 <span className="text-sm font-medium">{cat.name}</span>
               </Button>
@@ -261,68 +250,14 @@ export function RecipesClient({
           </div>
           <ScrollBar
             orientation="horizontal"
-            className="hover:cursor-pointer"
-          />
+            className="hover:cursor-pointer" />
         </ScrollArea>
       </div>
 
       {/* Recipe Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {filteredRecipes.map((recipe, index) => (
-          <Card key={index} className="overflow-hidden">
-            <div className="relative aspect-[4/3]">
-              <Image
-                src={
-                  recipe.mainImage
-                    ? urlFor(recipe.mainImage).url()
-                    : "/placeholder.svg"
-                }
-                alt={recipe.title || "Recipe Image"}
-                fill
-                className="object-cover"
-              />
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute top-2 right-2 bg-main-background rounded-full hover:bg-second-background"
-              >
-                <Heart className="h-7 w-7" />
-              </Button>
-            </div>
-            <CardHeader className="space-y-1">
-              <div className="flex justify-between items-start">
-                <h3 className="font-semibold text-lg line-clamp-1">
-                  {recipe.title}
-                </h3>
-                <Badge
-                  variant="secondary"
-                  className="bg-second-background rounded-full ml-2"
-                >
-                  {recipe.mealType}
-                </Badge>
-              </div>
-              <div className="text-second-paragraph-text flex items-center gap-2 text-muted-foreground">
-                <Clock className="h-4 w-4" />
-                <span className="text-sm">{recipe.cookingTime} mins</span>
-                <ChefHat className="h-4 w-4 ml-2" />
-                <span className="text-sm">{recipe.difficulty}</span>
-              </div>
-            </CardHeader>
-            <CardFooter className="flex justify-between items-center">
-              <Link
-                href={"/recipes/" + recipe._id}
-                className="font-medium text-second-paragraph-text"
-              >
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="hover:bg-second-background font-medium text-second-paragraph-text"
-                >
-                  View Recipe
-                </Button>
-              </Link>
-            </CardFooter>
-          </Card>
+          <Recipe key={index} recipe={recipe} />
         ))}
       </div>
     </div>
