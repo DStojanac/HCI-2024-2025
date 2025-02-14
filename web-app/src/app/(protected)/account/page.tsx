@@ -16,50 +16,53 @@ import {
   Mail,
   ChefHat,
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { auth } from "@/auth";
 import { db } from "@/db";
 import { favorites } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { RECIPE_ID_QUERY } from "@/sanity/lib/queries";
+import { RECIPE_ID_QUERY, USER_RECIPES_QUERY } from "@/sanity/lib/queries";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
+import { UserRound } from "lucide-react";
 
 export default async function AccountPage() {
-  const session=await auth()
+  const session = await auth();
 
-  if(!session){
-    return
+  if (!session) {
+    return;
   }
 
-  const favoriteRecipesIds = await db.select({id:favorites.recipeId}).from(favorites).where(eq(favorites.userId, session?.user.id))  
+  const favoriteRecipesIds = await db
+    .select({ id: favorites.recipeId })
+    .from(favorites)
+    .where(eq(favorites.userId, session?.user.id));
   const favoriteRecipes = await Promise.all(
     favoriteRecipesIds.map(async (favorite) => {
       const recipe = await client.fetch(RECIPE_ID_QUERY, { id: favorite.id });
       return recipe;
     })
   );
-  
+
+  const user_recipes = await client.fetch(USER_RECIPES_QUERY, {
+    userId: session.user.id,
+  });
+
   return (
     <div className="container mx-auto px-4 py-6 sm:py-10 bg-main-background mb-20">
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Profile Summary - Fixed width */}
         <Card className="w-full lg:w-80 h-fit mb-6 lg:mb-0">
-          <CardHeader className="text-center">
-            <div className="mx-auto mb-4 relative w-32 h-32">
-              <Image
-                src="/images/benefits.png"
-                alt="Profile picture"
-                className="rounded-full object-cover"
-                fill
-              />
+          <CardHeader className="text-center items-center">
+            <div className="  flex w-28 h-28">
+              <UserRound className="h-28 w-28 stroke-current justify-center items-center text-main-paragraph-text" />
             </div>
             <CardTitle className="text-2xl">{session.user.name}</CardTitle>
-            {/* <CardDescription>Member since 2023</CardDescription> */}
           </CardHeader>
           <CardContent>
             <div className="flex justify-around text-center">
               <div>
-                <p className="text-2xl font-bold">12</p>
+                <p className="text-2xl font-bold">{user_recipes.length}</p>
                 <p className="text-sm text-muted-foreground">Recipes</p>
               </div>
               <div>
@@ -100,21 +103,34 @@ export default async function AccountPage() {
             {/* My Recipes Tab */}
             <TabsContent value="recipes">
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {[1, 2, 3].map((recipe) => (
-                  <Card key={recipe}>
+                {user_recipes.map((recipe) => (
+                  <Card key={recipe._id}>
                     <div className="relative aspect-video">
                       <Image
-                        src="/placeholder.svg"
+                        src={
+                          recipe?.mainImage
+                            ? urlFor(recipe.mainImage).url()
+                            : "/placeholder.svg"
+                        }
                         alt="Recipe thumbnail"
                         fill
                         className="object-cover rounded-t-lg"
                       />
                     </div>
                     <CardHeader>
-                      <CardTitle className="text-lg">Homemade Pasta</CardTitle>
-                      <CardDescription className="flex items-center gap-2">
+                      <div className="flex justify-between items-center mb-2">
+                        <CardTitle className="text-lg">
+                          {recipe?.title}
+                        </CardTitle>
+                        <Badge className="bg-second-background rounded-full ml-2">
+                          {recipe.mealType}
+                        </Badge>
+                      </div>
+                      <CardDescription className="flex items-center gap-2 text-second-paragraph-text">
                         <Clock className="h-4 w-4" />
-                        30 mins
+                        {recipe?.cookingTime + " mins"}
+                        <ChefHat className="h-4 w-4 ml-2" />
+                        {recipe?.difficulty}
                       </CardDescription>
                     </CardHeader>
                   </Card>
@@ -125,21 +141,32 @@ export default async function AccountPage() {
             {/* Favorites Tab */}
             <TabsContent value="favorites">
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {favoriteRecipes.map((favorite,index) => (
+                {favoriteRecipes.map((favorite, index) => (
                   <Card key={index}>
                     <div className="relative aspect-video">
                       <Image
-                        src={favorite?.mainImage ? urlFor(favorite.mainImage).url() : "/placeholder.svg"} 
+                        src={
+                          favorite?.mainImage
+                            ? urlFor(favorite.mainImage).url()
+                            : "/placeholder.svg"
+                        }
                         alt="Recipe thumbnail"
                         fill
                         className="object-cover rounded-t-lg"
                       />
                     </div>
                     <CardHeader>
-                      <CardTitle className="text-lg">{favorite?.title}</CardTitle>
-                      <CardDescription className="flex items-center gap-2">
+                      <div className="flex justify-between items-center mb-2">
+                        <CardTitle className="text-lg">
+                          {favorite?.title}
+                        </CardTitle>
+                        <Badge className="bg-second-background rounded-full ml-2">
+                          {favorite?.mealType}
+                        </Badge>
+                      </div>
+                      <CardDescription className="flex items-center gap-2 text-second-paragraph-text">
                         <Clock className="h-4 w-4" />
-                        {favorite?.cookingTime+" mins"}
+                        {favorite?.cookingTime + " mins"}
                         <ChefHat className="h-4 w-4 ml-2" />
                         {favorite?.difficulty}
                       </CardDescription>
@@ -177,7 +204,6 @@ export default async function AccountPage() {
                       </p>
                     </div>
                   </div>
-                  {/* <Button variant="outline">Change Password</Button> */}
                 </CardContent>
               </Card>
             </TabsContent>

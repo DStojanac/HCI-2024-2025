@@ -37,3 +37,25 @@ export const RECIPE_ID_QUERY = defineQuery(
     author->{ name }
   }`
 );
+
+export const USER_RECIPES_QUERY = defineQuery(
+  `*[_type == "recipe" && author->supabaseUserId == $userId]{
+    _id,
+    title,
+    "mainImage": mainImage.asset->url,
+    description,
+    cookingTime,
+    servings,
+    difficulty,
+    ingredients,
+    instructions,
+    nutrition,
+    cuisineType,
+    mealType,
+    author->{
+      supabaseUserId,
+      name,
+      email
+    }
+  }`
+);
