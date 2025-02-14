@@ -1,62 +1,70 @@
-import Link from "next/link";
-import Image from "next/image";
+import Image from "next/image"
+import Link from "next/link"
+import { Clock } from "lucide-react"
+import { client } from "@/sanity/lib/client"
+import { BLOG_QUERY } from "@/sanity/lib/queries"
+import { urlFor } from "@/sanity/lib/image"
+import { BLOG_QUERYResult } from "../../../../sanity.types"
 
-export type BlogRecipePost = {
-  id: number;
-  name: string;
-  ingredients: string[];
-  instructions: string[];
-  prepTimeMinutes: number;
-  cookTimeMinutes: number;
-  servings: number;
-  difficulty: "Easy" | "Medium" | "Hard";
-  cuisine: string;
-  caloriesPerServing: number;
-  tags: string[];
-  userId: number;
-  image: string;
-  rating: number;
-  reviewCount: number;
-  mealType: string[];
-};
-
-async function getBlogPosts(): Promise<BlogRecipePost[]> {
-  const response = await fetch(`${process.env.BASE_API_URL}/recipes`);
-  const data = await response.json();
-  return data.recipes;
+async function getBlogPosts() {
+  const blogs = client.fetch(BLOG_QUERY)
+  return blogs
 }
 
-export default async function BlogPostsPage() {
-  const blogPosts: BlogRecipePost[] = await getBlogPosts();
-  // console.log(blogPosts);
-
+export default async function BlogPage() {
+  const posts: BLOG_QUERYResult = await getBlogPosts()
   return (
-    <>
-      <h1 className="flex justify-center text-4xl p-5">BLOG POSTS </h1>
+    <div className="min-h-screen bg-main-background">
+      <div className="container mx-auto px-4 py-10">
+        <div className="mb-12 text-center">
+          <h1 className="text-4xl font-bold tracking-tight mb-4">Kitchen tips & Blog</h1>
+          <p className="text-lg text-muted-foreground">Find all the tips & tricks of our best chefs.</p>
+        </div>
 
-      <div className="flex justify-center ">
-        <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 ">
-          {blogPosts.map((post) => (
-            <div key={post.id} className="border p-4 max-w-sm w-full">
-              <Image
-                width={300}
-                height={200}
-                src={post.image}
-                alt={post.name}
-                className="w-full  "
-              />
-              <h2 className="text-xl font-bold">{post.name}</h2>
-              <p>{post.ingredients.join(", ")}</p>
-              <Link
-                href={`/blog/${post.id}`}
-                className="mt-4 inline-block px-4 py-2 bg-main-btn text-white-text rounded hover:bg-second-btn transition duration-300"
-              >
-                Read More
-              </Link>
-            </div>
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post) => (
+            <Link
+              key={post._id}
+              href={"/blog/" + post._id}
+              className="group relative overflow-hidden rounded-lg border border-second-background bg-main-background transition-shadow shadow-sm hover:shadow-md"
+            >
+              <div className="aspect-[4/3] w-full">
+                <Image
+                  src={post.mainImage ? urlFor(post.mainImage).url() : "/placeholder.svg"}
+                  alt={post.title || "No title available"}
+                  width={400}
+                  height={300}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <div className="p-6">
+                <h2 className="mb-2 text-xl text-main-paragraph-text font-semibold group-hover:underline">{post.title}</h2>
+                <p className="mb-4 line-clamp-2 text-second-paragraph-text">{post.description}</p>
+                <div className="items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <div className="relative h-8 w-8 overflow-hidden rounded-full">
+                      <Image
+                        src="/images/generic_avatar.png"
+                        alt={post.author || "Unknown author"}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <span className="text-sm text-main-paragraph-text font-semibold">{post.author}</span>
+                  </div>
+                  <div className="flex items-center gap-4 text-sm text-second-paragraph-text">
+                    <div className="ml-10 flex items-center gap-1">
+                      <Clock className="h-4 w-4" />
+                      <span>{post.readingTime} min read</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Link>
           ))}
         </div>
       </div>
-    </>
-  );
+    </div>
+  )
 }
+
