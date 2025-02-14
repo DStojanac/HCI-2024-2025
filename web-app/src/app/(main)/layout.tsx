@@ -4,6 +4,7 @@ import Header from "@/components/layout/Header";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { FavoritesProvider } from "@/contexts/favoritesContext";
 
 const Layout = async ({ children }: { children: React.ReactNode }) => {
   const session = await auth();
@@ -11,9 +12,11 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
     <div>
       <main>
         <SessionProvider session={session}>
-          <Header />
-          <NuqsAdapter>{children}</NuqsAdapter>
-          <Footer />
+          <FavoritesProvider>
+            <Header />
+            <NuqsAdapter>{children}</NuqsAdapter>
+            <Footer />
+          </FavoritesProvider>
         </SessionProvider>
       </main>
     </div>
