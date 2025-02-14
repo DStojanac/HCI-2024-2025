@@ -1,11 +1,11 @@
-import { BlogRecipePost } from "../page";
-import Image from "next/image";
-
-async function getBlogPost(id: string): Promise<BlogRecipePost> {
-  const response = await fetch(`${process.env.BASE_API_URL}/recipes/${id}`);
-  const data = response.json();
-  return data;
-}
+import Image from "next/image"
+import { Clock } from "lucide-react"
+import { BLOG_ID_QUERY } from "@/sanity/lib/queries";
+import { client } from "@/sanity/lib/client";
+import { urlFor } from "@/sanity/lib/image";
+import { PortableText } from "next-sanity";
+import { BLOG_ID_QUERYResult } from "../../../../../sanity.types";
+import NotFound from "@/app/not-found";
 
 export default async function BlogPage({
   params,
@@ -13,33 +13,77 @@ export default async function BlogPage({
   params: Promise<{ id: string }>;
 }) {
   const id = (await params).id;
-  const blogPost = await getBlogPost(id);
-  // console.log(blogPost);
+  const blog: BLOG_ID_QUERYResult = await client.fetch(BLOG_ID_QUERY, { id })
+
+  if (!blog) {
+    return <NotFound />
+  }
+
   return (
-    <>
-      <div className="flex pt-10 items-center justify-center w-full max-w-4xl mb-8">
-        <div className="border p-4 rounded-lg shadow-lg max-w-xl w-full">
+    <article className="min-h-screen bg-main-background">
+      {/* Hero Section */}
+      <div className="relative w-full h-80">
+        <div className="relativ w-full">
           <Image
-            width={300}
-            height={200}
-            src={blogPost.image}
-            alt={blogPost.name}
-            className="w-full   rounded-t-lg"
+            src={blog.backgroundImage ? urlFor(blog.backgroundImage).url() : "/placeholder.svg"}
+            alt="Cooking ingredients on wooden surface"
+            fill
+            className="object-cover"
+            priority
           />
-          <h1 className="text-4xl font-extrabold tracking-tight text-center mt-4">
-            {blogPost.name}
-          </h1>
-          <p className="text-sm text-gray-600 mt-4">
-            {blogPost.ingredients.join(", ")}
-          </p>
-          <h2 className="text-2xl font-bold mt-4">Instructions</h2>
-          <ol className="list-decimal list-inside mt-2">
-            {blogPost.instructions.map((instruction, index) => (
-              <li key={index}>{instruction}</li>
-            ))}
-          </ol>
+        </div>
+        <div className="absolute inset-0">
+          <div className="container mx-auto h-full max-w-4xl px-4 py-12">
+            <div className="flex h-full flex-col justify-end text-white">
+              <div className="space-y-4 flex items-center justify-center flex-col">
+                <h1 className="text-4xl font-bold justify-center align-middle">Unique ingredients</h1>
+                <div className="relative w-16 h-16 rounded-full overflow-hidden">
+                  <Image
+                    src="/images/generic_avatar.png"
+                    alt={blog.author || "Author"}
+                    fill
+                    className="object-cover" />
+                </div>
+                <p>{blog.author}</p>
+                <div className="flex items-center text-sm">
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-4 w-4" />
+                    <span>5 min read</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </>
-  );
+
+      {/* Content */}
+      <div className="container mx-auto max-w-4xl px-4 py-10">
+        <div className="prose prose-gray mx-auto max-w-none">
+          <p className="text-main-paragraph-text text-[40px] font-bold py-6">Introduction</p>
+          <p className="text-second-paragraph-text">{blog.introduction}</p>
+
+          <div className="relative aspect-video rounded-lg overflow-hidden my-10">
+            <Image
+              src={blog.mainImage ? urlFor(blog.mainImage).url() : "/placeholder.svg"}
+              alt="Blog content image"
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-cover"
+            />
+          </div>
+          {blog.mainContent && blog.mainContent.map((component, index) => (
+            <div className="pt-4" key={index}>
+              <PortableText value={component} />
+            </div>
+          ))}
+
+          <p className="text-[40px] font-bold pt-8 pb-4">Conclusion</p>
+          <p className="text-second-paragraph-text">
+            {blog.conclusion}
+          </p>
+        </div>
+      </div>
+    </article>
+  )
 }
