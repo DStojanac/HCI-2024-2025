@@ -68,6 +68,66 @@ export type Geopoint = {
   alt?: number;
 };
 
+export type BlogPost = {
+  _id: string;
+  _type: "blogPost";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  slug?: Slug;
+  mainImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  backgroundImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  description?: string;
+  introduction?: string;
+  mainContent?: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }>;
+  conclusion?: string;
+  readingTime?: number;
+  author?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "author";
+  };
+};
+
 export type Recipe = {
   _id: string;
   _type: "recipe";
@@ -189,7 +249,7 @@ export type Slug = {
   source?: string;
 };
 
-export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | Recipe | Author | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | Slug;
+export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | BlogPost | Recipe | Author | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata | Slug;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./src/sanity/lib/queries.ts
 // Variable: RECIPE_QUERY
@@ -291,6 +351,75 @@ export type USER_RECIPES_QUERYResult = Array<{
     email: string | null;
   } | null;
 }>;
+// Variable: BLOG_QUERY
+// Query: *[_type=="blogPost"]{  _id,  title,  mainImage,  description,  readingTime,  "author":author->name}
+export type BLOG_QUERYResult = Array<{
+  _id: string;
+  title: string | null;
+  mainImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  } | null;
+  description: string | null;
+  readingTime: number | null;
+  author: string | null;
+}>;
+// Variable: BLOG_ID_QUERY
+// Query: *[_type=="blogPost"&&_id==$id][0]{  title,  mainImage,  backgroundImage,  readingTime,  introduction,  mainImage,  mainContent,  conclusion,  "author":author->name}
+export type BLOG_ID_QUERYResult = {
+  title: string | null;
+  mainImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  } | null;
+  backgroundImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  } | null;
+  readingTime: number | null;
+  introduction: string | null;
+  mainContent: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+  }> | null;
+  conclusion: string | null;
+  author: string | null;
+} | null;
 
 // Query TypeMap
 import "@sanity/client";
@@ -299,5 +428,7 @@ declare module "@sanity/client" {
     "*[_type== \"recipe\" && status==\"published\" && defined(slug.current)]{\n  _id,\n  title,\n  \"mainImage\": mainImage.asset->url,\n  description,\n  cookingTime,\n  servings,\n  difficulty,\n  ingredients,\n  instructions,\n  nutrition,\n  cuisineType,\n  mealType,\n  author->{\n  supabaseUserId,\n  name,\n  email\n  }\n}": RECIPE_QUERYResult;
     "*[_type == \"recipe\" && _id == $id][0]{\n    title,\n    mainImage,\n    description,\n    ingredients,\n    instructions,\n    nutrition,\n    cookingTime,\n    servings,\n    difficulty,\n    mealType,\n    author->{ name }\n  }": RECIPE_ID_QUERYResult;
     "*[_type == \"recipe\" && author->supabaseUserId == $userId]{\n    _id,\n    title,\n    \"mainImage\": mainImage.asset->url,\n    description,\n    cookingTime,\n    servings,\n    difficulty,\n    ingredients,\n    instructions,\n    nutrition,\n    cuisineType,\n    mealType,\n    author->{\n      supabaseUserId,\n      name,\n      email\n    }\n  }": USER_RECIPES_QUERYResult;
+    "*[_type==\"blogPost\"]{\n  _id,\n  title,\n  mainImage,\n  description,\n  readingTime,\n  \"author\":author->name\n}": BLOG_QUERYResult;
+    "*[_type==\"blogPost\"&&_id==$id][0]{\n  title,\n  mainImage,\n  backgroundImage,\n  readingTime,\n  introduction,\n  mainImage,\n  mainContent,\n  conclusion,\n  \"author\":author->name\n}": BLOG_ID_QUERYResult;
   }
 }
