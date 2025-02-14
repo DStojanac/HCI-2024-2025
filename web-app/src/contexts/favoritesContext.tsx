@@ -40,6 +40,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
       const favorites = await getFavoritedRecipes();
       setFavoritedRecipes(favorites);
     } catch (error) {
+      console.error("Error refreshing favorites:", error);
     } finally {
       setIsLoading(false);
     }
