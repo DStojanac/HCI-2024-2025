@@ -1,115 +1,63 @@
-"use client"
+"use client";
 
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Clock, Users, ChefHat, Heart } from "lucide-react";
+import { Clock, Users, ChefHat } from "lucide-react";
 import { urlFor } from "@/sanity/lib/image";
 import { RECIPE_ID_QUERYResult } from "../../sanity.types";
 import NotFound from "@/app/not-found";
-import { useCallback, useEffect, useState } from "react";
+import { FavoriteButton } from "@/components/favoriteButton";
+import { useFavorites } from "@/contexts/favoritesContext";
+import { useEffect } from "react";
 import { useSession } from "next-auth/react";
-import toast, { Toaster } from "react-hot-toast";
 
-export default  function RecipeClient({
-  recipe, id
+export default function RecipeClient({
+  recipe,
+  id,
 }: {
   recipe: RECIPE_ID_QUERYResult;
-  id:string
+  id: string;
 }) {
-  const [isFavorite, setIsFavorite] = useState(false)
-  const { data: session } = useSession()
-
-  const showToast = useCallback((message: string) => {
-    toast.error(message, {
-      style: {
-        background: "#dbcdb5",
-        maxWidth: "none",
-        whiteSpace: "nowrap",
-      },
-      duration: 2000,
-    })
-  }, [])
-
-  const checkFavoriteStatus = useCallback(async () => {
-    try {
-      const response = await fetch(`/api/favorites?recipeId=${id}`)
-      if (response.ok) {
-        const data = await response.json()
-        setIsFavorite(data.isFavorite)
-      } else {
-        showToast(response.statusText)
-      }
-    } catch (error) {
-      showToast(`Error checking favorite status: ${error}`)
-    }
-  }, [id, showToast])
+  const { refreshFavorites } = useFavorites();
+  const { status } = useSession();
 
   useEffect(() => {
-    if (session?.user?.id) {
-      checkFavoriteStatus()
-    }
-  }, [session, checkFavoriteStatus])
-
-  const toggleFavorite = async () => {
-    if (!session?.user?.id) {
-      showToast("You must be logged in to favorite recipes")
-      return
-    }
-
-    try {
-      const response = await fetch(`/api/favorites?recipeId=${id}`, {
-        method: "POST",
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        setIsFavorite(data.isFavorite)
-      }
-      else{
-        showToast(response.statusText)
-      }
-    } catch (error) {
-      showToast(`Error toggling favorite: ${error}`)
-    }
-  }    
+    refreshFavorites();
+  }, [refreshFavorites, status]);
 
   if (!recipe) {
     return <NotFound />;
   }
 
   return (
-    <><Toaster
-      position="top-center"
-      reverseOrder={false} /><div className="bg-main-background container mx-auto px-12 py-10 xl:px-20">
+    <>
+      <div className="bg-main-background container mx-auto px-12 py-10 xl:px-20">
         <div className="grid md:grid-cols-2 gap-8">
           {/* Left Column: Image and Quick Info */}
           <div className="space-y-6">
             <div className="relative aspect-video rounded-lg overflow-hidden">
               <Image
-                src={recipe && recipe.mainImage
-                  ? urlFor(recipe.mainImage).url()
-                  : "/placeholder.svg"}
+                src={
+                  recipe && recipe.mainImage
+                    ? urlFor(recipe.mainImage).url()
+                    : "/placeholder.svg"
+                }
                 alt={recipe && recipe.title ? recipe.title : "Recipe Image"}
                 fill
-                className="object-cover" />
+                className="object-cover"
+              />
             </div>
             <div className="flex justify-between items-center text-main-paragraph-text">
               <h1 className="text-3xl font-bold">{recipe.title}</h1>
               <div className="flex space-x-4 ">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={toggleFavorite}
-                  className="bg-main-background hover:bg-second-background rounded-full"
-                >
-                <Heart className={`h-6 w-6 ${isFavorite ? "fill-current text-second-paragraph-text" : ""}`} />                
-                </Button>
+                <FavoriteButton recipeId={id} />
               </div>
             </div>
-            <div className="text-second-paragraph-text">{recipe.description}</div>
+            <div className="text-second-paragraph-text">
+              {recipe.description}
+            </div>
             <div className="flex flex-wrap gap-4 text-main-paragraph-text">
               <Badge
                 variant="secondary"
@@ -160,7 +108,7 @@ export default  function RecipeClient({
                         recipe.ingredients.map((ingredient) => (
                           <li key={ingredient._key}>
                             {ingredient.amount &&
-                              !ingredient.amount.startsWith("0")
+                            !ingredient.amount.startsWith("0")
                               ? `${ingredient.amount}`
                               : ""}{" "}
                             {ingredient.item}
@@ -215,7 +163,9 @@ export default  function RecipeClient({
                 <p className="text-lg font-medium">
                   {recipe.nutrition?.carbs ?? "N/A"}
                 </p>
-                <p className="text-sm text-muted-foreground capitalize">Carbs</p>
+                <p className="text-sm text-muted-foreground capitalize">
+                  Carbs
+                </p>
               </CardContent>
             </Card>
             <Card>
@@ -233,7 +183,9 @@ export default  function RecipeClient({
                 <p className="text-lg font-medium">
                   {recipe.nutrition?.fiber ?? "N/A"}
                 </p>
-                <p className="text-sm text-muted-foreground capitalize">Fiber</p>
+                <p className="text-sm text-muted-foreground capitalize">
+                  Fiber
+                </p>
               </CardContent>
             </Card>
           </div>
@@ -246,7 +198,8 @@ export default  function RecipeClient({
               src="/placeholder.svg"
               alt={recipe.author?.name ?? "Unknown Author"}
               fill
-              className="object-cover" />
+              className="object-cover"
+            />
           </div>
           <div>
             <p>Recipe by</p>
@@ -255,6 +208,7 @@ export default  function RecipeClient({
             </p>
           </div>
         </div>
-      </div></>
+      </div>
+    </>
   );
 }
