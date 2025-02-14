@@ -260,6 +260,37 @@ export type RECIPE_ID_QUERYResult = {
     name: string | null;
   } | null;
 } | null;
+// Variable: USER_RECIPES_QUERY
+// Query: *[_type == "recipe" && author->supabaseUserId == $userId]{    _id,    title,    "mainImage": mainImage.asset->url,    description,    cookingTime,    servings,    difficulty,    ingredients,    instructions,    nutrition,    cuisineType,    mealType,    author->{      supabaseUserId,      name,      email    }  }
+export type USER_RECIPES_QUERYResult = Array<{
+  _id: string;
+  title: string | null;
+  mainImage: string | null;
+  description: string | null;
+  cookingTime: number | null;
+  servings: number | null;
+  difficulty: "easy" | "hard" | "medium" | null;
+  ingredients: Array<{
+    amount?: string;
+    item?: string;
+    _key: string;
+  }> | null;
+  instructions: Array<string> | null;
+  nutrition: {
+    calories?: number;
+    protein?: number;
+    carbs?: number;
+    fat?: number;
+    fiber?: number;
+  } | null;
+  cuisineType: "american" | "chinese" | "croatian" | "indian" | "italian" | "mexican" | null;
+  mealType: "appetizer" | "beverage" | "breakfast" | "dessert" | "dinner" | "lunch" | "salad" | "snack" | "soup" | "vegeterian" | null;
+  author: {
+    supabaseUserId: string | null;
+    name: string | null;
+    email: string | null;
+  } | null;
+}>;
 
 // Query TypeMap
 import "@sanity/client";
@@ -267,5 +298,6 @@ declare module "@sanity/client" {
   interface SanityQueries {
     "*[_type== \"recipe\" && status==\"published\" && defined(slug.current)]{\n  _id,\n  title,\n  \"mainImage\": mainImage.asset->url,\n  description,\n  cookingTime,\n  servings,\n  difficulty,\n  ingredients,\n  instructions,\n  nutrition,\n  cuisineType,\n  mealType,\n  author->{\n  supabaseUserId,\n  name,\n  email\n  }\n}": RECIPE_QUERYResult;
     "*[_type == \"recipe\" && _id == $id][0]{\n    title,\n    mainImage,\n    description,\n    ingredients,\n    instructions,\n    nutrition,\n    cookingTime,\n    servings,\n    difficulty,\n    mealType,\n    author->{ name }\n  }": RECIPE_ID_QUERYResult;
+    "*[_type == \"recipe\" && author->supabaseUserId == $userId]{\n    _id,\n    title,\n    \"mainImage\": mainImage.asset->url,\n    description,\n    cookingTime,\n    servings,\n    difficulty,\n    ingredients,\n    instructions,\n    nutrition,\n    cuisineType,\n    mealType,\n    author->{\n      supabaseUserId,\n      name,\n      email\n    }\n  }": USER_RECIPES_QUERYResult;
   }
 }

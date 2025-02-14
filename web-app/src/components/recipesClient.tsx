@@ -14,6 +14,9 @@ import { Search } from "lucide-react";
 import { useQueryState } from "nuqs";
 import { RECIPE_QUERYResult } from "../../sanity.types";
 import Recipe from "./recipe";
+import { useSession } from "next-auth/react";
+import { useFavorites } from "@/contexts/favoritesContext";
+import { useEffect } from "react";
 
 export function RecipesClient({
   initialRecipes,
@@ -35,6 +38,14 @@ export function RecipesClient({
   const [category, setCategory] = useQueryState("category", {
     defaultValue: "all",
   });
+  const { refreshFavorites } = useFavorites();
+  const { status } = useSession();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      refreshFavorites();
+    }
+  }, [status, refreshFavorites]);
 
   const filteredRecipes = initialRecipes.filter((recipe) => {
     const matchesSearch = recipe.title
@@ -92,7 +103,8 @@ export function RecipesClient({
             placeholder="Search recipes..."
             className="pl-10 h-12 rounded-full focus:ring-second-btn shadow-lg"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)} />
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
 
         {/* Filters */}
@@ -229,20 +241,26 @@ export function RecipesClient({
               <Button
                 key={cat.name}
                 variant="ghost"
-                className={`flex flex-col items-center gap-2 h-auto p-4 ${category === cat.name.toLowerCase()
+                className={`flex flex-col items-center gap-2 h-auto p-4 ${
+                  category === cat.name.toLowerCase()
                     ? "bg-second-background"
-                    : "hover:bg-second-background"}`}
-                onClick={() => setCategory((prevCategory) => prevCategory === cat.name.toLowerCase()
-                  ? "all"
-                  : cat.name.toLowerCase()
-                )}
+                    : "hover:bg-second-background"
+                }`}
+                onClick={() =>
+                  setCategory((prevCategory) =>
+                    prevCategory === cat.name.toLowerCase()
+                      ? "all"
+                      : cat.name.toLowerCase()
+                  )
+                }
               >
                 <div className="relative w-16 h-16 rounded-full overflow-hidden">
                   <Image
                     src={cat.image || "/placeholder.svg"}
                     alt={cat.name}
                     fill
-                    className="object-cover" />
+                    className="object-cover"
+                  />
                 </div>
                 <span className="text-sm font-medium">{cat.name}</span>
               </Button>
@@ -250,14 +268,15 @@ export function RecipesClient({
           </div>
           <ScrollBar
             orientation="horizontal"
-            className="hover:cursor-pointer" />
+            className="hover:cursor-pointer"
+          />
         </ScrollArea>
       </div>
 
       {/* Recipe Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredRecipes.map((recipe, index) => (
-          <Recipe key={index} recipe={recipe} />
+        {filteredRecipes.map((recipe) => (
+          <Recipe key={recipe._id} recipe={recipe} />
         ))}
       </div>
     </div>
