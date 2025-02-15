@@ -48,7 +48,7 @@ export default async function BlogPage({
                 <div className="flex items-center text-sm">
                   <div className="flex items-center gap-2">
                     <Clock className="h-4 w-4" />
-                    <span>5 min read</span>
+                    <span>{blog.readingTime} min read</span>
                   </div>
                 </div>
               </div>
