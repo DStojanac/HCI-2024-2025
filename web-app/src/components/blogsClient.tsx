@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { Clock } from "lucide-react"
-import { urlFor } from "@/sanity/lib/image"
-import type { BLOG_QUERYResult } from "../../sanity.types"
+import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Clock } from "lucide-react";
+import { urlFor } from "@/sanity/lib/image";
+import type { BLOG_QUERYResult } from "../../sanity.types";
 import {
   Pagination,
   PaginationContent,
@@ -13,19 +13,19 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination"
+} from "@/components/ui/pagination";
 
 interface BlogListProps {
-  posts: BLOG_QUERYResult
+  posts: BLOG_QUERYResult;
 }
 
 export function BlogClient({ posts }: BlogListProps) {
-  const [currentPage, setCurrentPage] = useState(1)
-  const postsPerPage = 4
-  const indexOfLastPost = currentPage * postsPerPage
-  const indexOfFirstPost = indexOfLastPost - postsPerPage
-  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost)
-  const totalPages = Math.ceil(posts.length / postsPerPage)
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 6;
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+  const totalPages = Math.ceil(posts.length / postsPerPage);
 
   return (
     <>
@@ -38,7 +38,11 @@ export function BlogClient({ posts }: BlogListProps) {
           >
             <div className="aspect-[4/3] w-full">
               <Image
-                src={post.mainImage ? urlFor(post.mainImage).url() : "/placeholder.svg"}
+                src={
+                  post.mainImage
+                    ? urlFor(post.mainImage).url()
+                    : "/placeholder.svg"
+                }
                 alt={post.title || "No title available"}
                 width={400}
                 height={300}
@@ -49,7 +53,9 @@ export function BlogClient({ posts }: BlogListProps) {
               <h2 className="mb-2 text-xl text-main-paragraph-text font-semibold group-hover:underline">
                 {post.title}
               </h2>
-              <p className="mb-4 line-clamp-2 text-second-paragraph-text">{post.description}</p>
+              <p className="mb-4 line-clamp-2 text-second-paragraph-text">
+                {post.description}
+              </p>
               <div className="items-center gap-4">
                 <div className="flex items-center gap-2">
                   <div className="relative h-8 w-8 overflow-hidden rounded-full">
@@ -60,7 +66,9 @@ export function BlogClient({ posts }: BlogListProps) {
                       className="object-cover"
                     />
                   </div>
-                  <span className="text-sm text-main-paragraph-text font-semibold">{post.author}</span>
+                  <span className="text-sm text-main-paragraph-text font-semibold">
+                    {post.author}
+                  </span>
                 </div>
                 <div className="flex items-center gap-4 text-sm text-second-paragraph-text">
                   <div className="ml-10 flex items-center gap-1">
@@ -80,11 +88,13 @@ export function BlogClient({ posts }: BlogListProps) {
               <PaginationPrevious
                 href="#"
                 onClick={(e) => {
-                  e.preventDefault()
-                  setCurrentPage((prev) => Math.max(prev - 1, 1))
+                  e.preventDefault();
+                  setCurrentPage((prev) => Math.max(prev - 1, 1));
                 }}
                 className={`transition-all duration-200 border border-transparent hover:border-primary ${
-                  currentPage === 1 ? "pointer-events-none opacity-50" : "hover:bg-second-background"
+                  currentPage === 1
+                    ? "pointer-events-none opacity-50"
+                    : "hover:bg-second-background"
                 }`}
               />
             </PaginationItem>
@@ -93,8 +103,8 @@ export function BlogClient({ posts }: BlogListProps) {
                 <PaginationLink
                   href="#"
                   onClick={(e) => {
-                    e.preventDefault()
-                    setCurrentPage(page)
+                    e.preventDefault();
+                    setCurrentPage(page);
                   }}
                   isActive={currentPage === page}
                   className={`transition-all duration-200 border ${
@@ -111,11 +121,13 @@ export function BlogClient({ posts }: BlogListProps) {
               <PaginationNext
                 href="#"
                 onClick={(e) => {
-                  e.preventDefault()
-                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                  e.preventDefault();
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages));
                 }}
                 className={`transition-all duration-200 border border-transparent hover:border-primary ${
-                  currentPage === totalPages ? "pointer-events-none opacity-50" : "hover:bg-second-background"
+                  currentPage === totalPages
+                    ? "pointer-events-none opacity-50"
+                    : "hover:bg-second-background"
                 }`}
               />
             </PaginationItem>
@@ -123,6 +135,5 @@ export function BlogClient({ posts }: BlogListProps) {
         </Pagination>
       </div>
     </>
-  )
+  );
 }
-
