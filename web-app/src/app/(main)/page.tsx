@@ -4,6 +4,13 @@ import Benefits from "../../components/layout/Benefits";
 import Testimonials from "../../components/layout/Testimonials";
 import CTASection from "../../components/layout/CTASection";
 import AboutSection from "../../components/layout/AboutSection";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Home | Cooksy",
+  description:
+    "Learn about Cooksy's mission to make cooking accessible and enjoyable for everyone.",
+};
 
 export default function Home() {
   return (
