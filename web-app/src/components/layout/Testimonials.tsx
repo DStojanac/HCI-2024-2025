@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 type Testimonial = {
   quote: string;
@@ -40,29 +43,78 @@ const testimonials: Testimonial[] = [
 ];
 
 export default function Testimonials() {
+  const containerAnimation = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const itemAnimation = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
+
   return (
     <section className="py-16 md:py-24 bg-main-background">
-      <div className="text-center max-w-3xl mx-auto mb-20 2xl:mb-24">
-        <h2 className="text-4xl md:text-4xl lg:text-5xl 2xl:text-6xl font-bold text-main-paragraph-text mb-8">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={containerAnimation}
+        className="text-center max-w-3xl mx-auto mb-20 2xl:mb-24"
+      >
+        <motion.h2
+          variants={itemAnimation}
+          className="text-4xl md:text-4xl lg:text-5xl 2xl:text-6xl font-bold text-main-paragraph-text mb-8"
+        >
           Customer Testimonials
-        </h2>
-        <p className="text-xl xl:text-2xl text-second-paragraph-text">
+        </motion.h2>
+        <motion.p
+          variants={itemAnimation}
+          className="text-xl xl:text-2xl text-second-paragraph-text"
+        >
           Cooksy has transformed my cooking experience completely!
-        </p>
-      </div>
+        </motion.p>
+      </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 md:gap-16 gap-20">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={containerAnimation}
+        className="grid grid-cols-1 md:grid-cols-3 md:gap-16 gap-20"
+      >
         {testimonials.map((testimonial, index) => (
-          <div key={index} className="flex flex-col items-center text-center">
-            <blockquote className="mb-8">
+          <motion.div
+            key={index}
+            variants={itemAnimation}
+            className="flex flex-col items-center text-center"
+          >
+            <motion.blockquote
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="mb-8"
+            >
               <p className="text-xl xl:text-2xl font-semibold text-main-paragraph-text">
                 &quot;{testimonial.quote}&quot;
               </p>
-            </blockquote>
-            <div className="flex flex-col items-center">
+            </motion.blockquote>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
+              className="flex flex-col items-center"
+            >
               <div className="relative w-16 h-16 mb-4">
                 <Image
-                  src={testimonial.author.image}
+                  src={testimonial.author.image || "/placeholder.svg"}
                   alt={testimonial.author.name}
                   fill
                   className="object-cover rounded-full"
@@ -77,10 +129,10 @@ export default function Testimonials() {
                   {testimonial.author.role}
                 </p>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 }
