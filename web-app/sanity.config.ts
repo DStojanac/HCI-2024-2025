@@ -18,7 +18,7 @@ export default defineConfig({
   cors: {
     origin: [
       "http://localhost:3000",
-      "https://hci-2024-2025.vercel.app/", // Add your Vercel deploy URL here
+      "https://hci-2024-2025.vercel.app", // Add your Vercel deploy URL here
     ],
     credentials: true,
   },
