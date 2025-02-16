@@ -17,11 +17,6 @@ export default auth(async (req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
 
-  // Decoding token to get role from logged in user
-  const token = await getToken({ req, secret });
-  const userRole = token?.role;
-  // console.log(userRole);
-
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isPublicRoute = publicRoutes.some((route) => {
     const regex = new RegExp(`^${route.replace("*", ".*")}$`);
@@ -45,6 +40,10 @@ export default auth(async (req) => {
     if (!isLoggedIn) {
       return Response.redirect(new URL("/login", nextUrl));
     }
+
+    // Decoding token to get role from logged in user
+    const token = await getToken({ req, secret });
+    const userRole = token?.role;
 
     if (userRole !== "admin") {
       return Response.redirect(new URL("/", nextUrl));
