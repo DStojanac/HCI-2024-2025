@@ -24,7 +24,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination"
+} from "@/components/ui/pagination";
 
 export function RecipesClient({
   initialRecipes,
@@ -49,8 +49,8 @@ export function RecipesClient({
   const { refreshFavorites } = useFavorites();
   const { status } = useSession();
 
-  const [currentPage, setCurrentPage] = useState(1)
-  const recipesPerPage = 4
+  const [currentPage, setCurrentPage] = useState(1);
+  const recipesPerPage = 8;
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -94,14 +94,14 @@ export function RecipesClient({
   });
 
   const paginatedRecipes = useMemo(() => {
-    const indexOfLastRecipe = currentPage * recipesPerPage
-    const indexOfFirstRecipe = indexOfLastRecipe - recipesPerPage
-    return filteredRecipes.slice(indexOfFirstRecipe, indexOfLastRecipe)
-  }, [currentPage, filteredRecipes])
+    const indexOfLastRecipe = currentPage * recipesPerPage;
+    const indexOfFirstRecipe = indexOfLastRecipe - recipesPerPage;
+    return filteredRecipes.slice(indexOfFirstRecipe, indexOfLastRecipe);
+  }, [currentPage, filteredRecipes]);
 
   useEffect(() => {
-    setCurrentPage(1)
-  }, [searchTerm, cuisineType, cookingTime, difficulty, category])
+    setCurrentPage(1);
+  }, [searchTerm, cuisineType, cookingTime, difficulty, category]);
 
   const clearFilters = () => {
     setSearchTerm("");
@@ -110,7 +110,7 @@ export function RecipesClient({
     setDifficulty("all");
   };
   return (
-    <div className="container mx-auto px-4 py-10 bg-main-background">
+    <div className="container mx-auto px-4 py-10 mb-20 bg-main-background">
       {/* Search and Filters Section */}
       <div className="text-main-paragraph-text space-y-6 mb-8">
         <h1 className="text-4xl font-bold text-center mb-8">
@@ -262,10 +262,11 @@ export function RecipesClient({
               <Button
                 key={cat.name}
                 variant="ghost"
-                className={`flex flex-col items-center gap-2 h-auto p-4 ${category === cat.name.toLowerCase()
+                className={`flex flex-col items-center gap-2 h-auto p-4 ${
+                  category === cat.name.toLowerCase()
                     ? "bg-second-background"
                     : "hover:bg-second-background"
-                  }`}
+                }`}
                 onClick={() =>
                   setCategory((prevCategory) =>
                     prevCategory === cat.name.toLowerCase()
@@ -308,19 +309,25 @@ export function RecipesClient({
               <PaginationPrevious
                 href="#"
                 onClick={(e) => {
-                  e.preventDefault()
-                  setCurrentPage((prev) => Math.max(prev - 1, 1))
+                  e.preventDefault();
+                  setCurrentPage((prev) => Math.max(prev - 1, 1));
                 }}
-                className={currentPage === 1 ? "pointer-events-none opacity-50 mx-2" : "hover:bg-second-background"}
+                className={
+                  currentPage === 1
+                    ? "pointer-events-none opacity-50 mx-2"
+                    : "hover:bg-second-background"
+                }
               />
             </PaginationItem>
-            {Array.from({ length: Math.ceil(filteredRecipes.length / recipesPerPage) }).map((_, index) => (
+            {Array.from({
+              length: Math.ceil(filteredRecipes.length / recipesPerPage),
+            }).map((_, index) => (
               <PaginationItem key={index}>
-                <PaginationLink 
+                <PaginationLink
                   href="#"
                   onClick={(e) => {
-                    e.preventDefault()
-                    setCurrentPage(index + 1)
+                    e.preventDefault();
+                    setCurrentPage(index + 1);
                   }}
                   isActive={currentPage === index + 1}
                   className="hover:bg-second-background"
@@ -333,11 +340,19 @@ export function RecipesClient({
               <PaginationNext
                 href="#"
                 onClick={(e) => {
-                  e.preventDefault()
-                  setCurrentPage((prev) => Math.min(prev + 1, Math.ceil(filteredRecipes.length / recipesPerPage)))
+                  e.preventDefault();
+                  setCurrentPage((prev) =>
+                    Math.min(
+                      prev + 1,
+                      Math.ceil(filteredRecipes.length / recipesPerPage)
+                    )
+                  );
                 }}
                 className={
-                  currentPage === Math.ceil(filteredRecipes.length / recipesPerPage) ? "pointer-events-none opacity-50" : "hover:bg-second-background"
+                  currentPage ===
+                  Math.ceil(filteredRecipes.length / recipesPerPage)
+                    ? "pointer-events-none opacity-50"
+                    : "hover:bg-second-background"
                 }
               />
             </PaginationItem>
