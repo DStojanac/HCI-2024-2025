@@ -6,12 +6,37 @@ import { urlFor } from "@/sanity/lib/image";
 import { PortableText } from "next-sanity";
 import { BLOG_ID_QUERYResult } from "../../../../../sanity.types";
 import NotFound from "@/app/not-found";
+import { UserRound } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Blog Post | Cooksy",
   description:
     "Learn about Cooksy's mission to make cooking accessible and enjoyable for everyone.",
+};
+
+const components = {
+  block: {
+    // Ex. 1: customizing common block types
+    h2: ({ children }: { children?: React.ReactNode }) => (
+      <h2 className="text-3xl font-bold">{children}</h2>
+    ),
+    h3: ({ children }: { children?: React.ReactNode }) => (
+      <h3 className="text-2xl font-semibold">{children}</h3>
+    ),
+  },
+  list: {
+    // Ex. 1: customizing common list types
+    bullet: ({ children }: { children?: React.ReactNode }) => (
+      <ul className="mt-xl">{children}</ul>
+    ),
+  },
+  listItem: {
+    // Ex. 1: customizing common list types
+    bullet: ({ children }: { children?: React.ReactNode }) => (
+      <li style={{ listStyleType: "disclosure-closed" }}>{children}</li>
+    ),
+  },
 };
 
 export default async function BlogPage({
@@ -30,35 +55,20 @@ export default async function BlogPage({
     <article className="min-h-screen bg-main-background">
       {/* Hero Section */}
       <div className="relative w-full h-80">
-        <div className=" w-full">
-          <Image
-            src={
-              blog.backgroundImage
-                ? urlFor(blog.backgroundImage).url()
-                : "/placeholder.svg"
-            }
-            alt="Cooking ingredients on wooden surface"
-            fill
-            className="object-cover"
-            priority
-          />
-        </div>
+        <div className=" w-full"></div>
         <div className="absolute inset-0">
-          <div className="container mx-auto h-full max-w-4xl px-4 py-12">
-            <div className="flex h-full flex-col justify-end text-white">
+          <div className="container mx-auto h-full max-w-4xl px-4 py-9">
+            <div className="flex h-full flex-col justify-end text-main-btn">
               <div className="space-y-4 flex items-center justify-center flex-col">
                 <h1 className="text-4xl font-bold justify-center align-middle">
-                  Unique ingredients
+                  {blog.title}
                 </h1>
                 <div className="relative w-16 h-16 rounded-full overflow-hidden">
-                  <Image
-                    src="/images/generic_avatar.png"
-                    alt={blog.author || "Author"}
-                    fill
-                    className="object-cover"
-                  />
+                  <UserRound className="h-16 w-16 text-second-paragraph-text stroke-[1.5px]" />
                 </div>
-                <p>{blog.author}</p>
+                <p className="font-bold text-main-paragraph-text">
+                  {blog.author}
+                </p>
                 <div className="flex items-center text-sm">
                   <div className="flex items-center gap-2">
                     <Clock className="h-4 w-4" />
@@ -95,7 +105,7 @@ export default async function BlogPage({
           {blog.mainContent &&
             blog.mainContent.map((component, index) => (
               <div className="pt-4" key={index}>
-                <PortableText value={component} />
+                <PortableText value={component} components={components} />
               </div>
             ))}
 

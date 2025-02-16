@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Clock } from "lucide-react";
+import { Clock, UserRound } from "lucide-react";
 import { urlFor } from "@/sanity/lib/image";
 import type { BLOG_QUERYResult } from "../../sanity.types";
 import {
@@ -59,12 +59,7 @@ export function BlogClient({ posts }: BlogListProps) {
               <div className="items-center gap-4">
                 <div className="flex items-center gap-2">
                   <div className="relative h-8 w-8 overflow-hidden rounded-full">
-                    <Image
-                      src="/images/generic_avatar.png"
-                      alt={post.author || "Unknown author"}
-                      fill
-                      className="object-cover"
-                    />
+                    <UserRound className="h-8 w-8 text-second-paragraph-text stroke-[1.5px]" />
                   </div>
                   <span className="text-sm text-main-paragraph-text font-semibold">
                     {post.author}
