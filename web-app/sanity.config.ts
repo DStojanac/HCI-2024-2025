@@ -15,13 +15,6 @@ import { structure } from "./src/sanity/structure";
 
 export default defineConfig({
   basePath: "/studio",
-  cors: {
-    origin: [
-      "http://localhost:3000",
-      "https://hci-2024-2025.vercel.app", // Add your Vercel deploy URL here
-    ],
-    credentials: true,
-  },
   projectId,
   dataset,
   // Add and edit the content schema in the './sanity/schemaTypes' folder
