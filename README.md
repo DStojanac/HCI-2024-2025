@@ -20,7 +20,7 @@
 ### Semester Project
 
 - Link to your production version: [**Production Version**](https://hci-2024-2025.vercel.app/) <!-- Replace with actual URL -->
-- Link to your final report: [**Final Report**](URL_TO_FINAL_REPORT) <!-- Replace with actual URL -->
+- Link to your final report: [**Final Report**](https://clever-fiber-f5d.notion.site/Cooksy-14b1d4aa000381868c9df2be5cdb7874) <!-- Replace with actual URL -->
 <!-- Add more as necessary -->
 
 ### Semester Assignments
