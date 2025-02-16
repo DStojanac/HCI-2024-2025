@@ -59,3 +59,28 @@ export const USER_RECIPES_QUERY = defineQuery(
     }
   }`
 );
+
+export const BLOG_QUERY=defineQuery(
+  `*[_type=="blogPost"]{
+  _id,
+  title,
+  mainImage,
+  description,
+  readingTime,
+  "author":author->name
+}`
+)
+
+export const BLOG_ID_QUERY=defineQuery(
+  `*[_type=="blogPost"&&_id==$id][0]{
+  title,
+  mainImage,
+  backgroundImage,
+  readingTime,
+  introduction,
+  mainImage,
+  mainContent,
+  conclusion,
+  "author":author->name
+}`
+)

@@ -16,7 +16,15 @@ import { RECIPE_QUERYResult } from "../../sanity.types";
 import Recipe from "./recipe";
 import { useSession } from "next-auth/react";
 import { useFavorites } from "@/contexts/favoritesContext";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
 
 export function RecipesClient({
   initialRecipes,
@@ -40,6 +48,9 @@ export function RecipesClient({
   });
   const { refreshFavorites } = useFavorites();
   const { status } = useSession();
+
+  const [currentPage, setCurrentPage] = useState(1)
+  const recipesPerPage = 4
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -81,6 +92,16 @@ export function RecipesClient({
       matchesCategory
     );
   });
+
+  const paginatedRecipes = useMemo(() => {
+    const indexOfLastRecipe = currentPage * recipesPerPage
+    const indexOfFirstRecipe = indexOfLastRecipe - recipesPerPage
+    return filteredRecipes.slice(indexOfFirstRecipe, indexOfLastRecipe)
+  }, [currentPage, filteredRecipes])
+
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchTerm, cuisineType, cookingTime, difficulty, category])
 
   const clearFilters = () => {
     setSearchTerm("");
@@ -241,11 +262,10 @@ export function RecipesClient({
               <Button
                 key={cat.name}
                 variant="ghost"
-                className={`flex flex-col items-center gap-2 h-auto p-4 ${
-                  category === cat.name.toLowerCase()
+                className={`flex flex-col items-center gap-2 h-auto p-4 ${category === cat.name.toLowerCase()
                     ? "bg-second-background"
                     : "hover:bg-second-background"
-                }`}
+                  }`}
                 onClick={() =>
                   setCategory((prevCategory) =>
                     prevCategory === cat.name.toLowerCase()
@@ -275,9 +295,54 @@ export function RecipesClient({
 
       {/* Recipe Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredRecipes.map((recipe) => (
+        {paginatedRecipes.map((recipe) => (
           <Recipe key={recipe._id} recipe={recipe} />
         ))}
+      </div>
+
+      {/* Pagination */}
+      <div className="mt-8 text-main-paragraph-text">
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault()
+                  setCurrentPage((prev) => Math.max(prev - 1, 1))
+                }}
+                className={currentPage === 1 ? "pointer-events-none opacity-50 mx-2" : "hover:bg-second-background"}
+              />
+            </PaginationItem>
+            {Array.from({ length: Math.ceil(filteredRecipes.length / recipesPerPage) }).map((_, index) => (
+              <PaginationItem key={index}>
+                <PaginationLink 
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    setCurrentPage(index + 1)
+                  }}
+                  isActive={currentPage === index + 1}
+                  className="hover:bg-second-background"
+                >
+                  {index + 1}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+            <PaginationItem>
+              <PaginationNext
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault()
+                  setCurrentPage((prev) => Math.min(prev + 1, Math.ceil(filteredRecipes.length / recipesPerPage)))
+                }}
+                className={
+                  currentPage === Math.ceil(filteredRecipes.length / recipesPerPage) ? "pointer-events-none opacity-50" : "hover:bg-second-background"
+                }
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
       </div>
     </div>
   );

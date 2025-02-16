@@ -1,62 +1,35 @@
-import Link from "next/link";
-import Image from "next/image";
+import { client } from "@/sanity/lib/client";
+import { BLOG_QUERY } from "@/sanity/lib/queries";
+import type { BLOG_QUERYResult } from "../../../../sanity.types";
+import { BlogClient } from "@/components/blogsClient";
+import type { Metadata } from "next";
 
-export type BlogRecipePost = {
-  id: number;
-  name: string;
-  ingredients: string[];
-  instructions: string[];
-  prepTimeMinutes: number;
-  cookTimeMinutes: number;
-  servings: number;
-  difficulty: "Easy" | "Medium" | "Hard";
-  cuisine: string;
-  caloriesPerServing: number;
-  tags: string[];
-  userId: number;
-  image: string;
-  rating: number;
-  reviewCount: number;
-  mealType: string[];
+export const metadata: Metadata = {
+  title: "Blog Posts | Cooksy",
+  description:
+    "Learn about Cooksy's mission to make cooking accessible and enjoyable for everyone.",
 };
 
-async function getBlogPosts(): Promise<BlogRecipePost[]> {
-  const response = await fetch(`${process.env.BASE_API_URL}/recipes`);
-  const data = await response.json();
-  return data.recipes;
+async function getBlogPosts() {
+  const blogs = client.fetch(BLOG_QUERY);
+  return blogs;
 }
 
-export default async function BlogPostsPage() {
-  const blogPosts: BlogRecipePost[] = await getBlogPosts();
-  // console.log(blogPosts);
-
+export default async function BlogPage() {
+  const posts: BLOG_QUERYResult = await getBlogPosts();
   return (
-    <>
-      <h1 className="flex justify-center text-4xl p-5">BLOG POSTS </h1>
-
-      <div className="flex justify-center ">
-        <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 ">
-          {blogPosts.map((post) => (
-            <div key={post.id} className="border p-4 max-w-sm w-full">
-              <Image
-                width={300}
-                height={200}
-                src={post.image}
-                alt={post.name}
-                className="w-full  "
-              />
-              <h2 className="text-xl font-bold">{post.name}</h2>
-              <p>{post.ingredients.join(", ")}</p>
-              <Link
-                href={`/blog/${post.id}`}
-                className="mt-4 inline-block px-4 py-2 bg-main-btn text-white-text rounded hover:bg-second-btn transition duration-300"
-              >
-                Read More
-              </Link>
-            </div>
-          ))}
+    <div className="min-h-screen bg-main-background">
+      <div className="container mx-auto px-4 py-10 mb-20">
+        <div className="mb-12 text-center">
+          <h1 className="text-4xl font-bold tracking-tight mb-4">
+            Kitchen tips & Blog
+          </h1>
+          <p className="text-lg text-muted-foreground">
+            Find all the tips & tricks of our best chefs.
+          </p>
         </div>
+        <BlogClient posts={posts} />
       </div>
-    </>
+    </div>
   );
 }

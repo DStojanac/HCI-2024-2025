@@ -195,7 +195,7 @@ export default function RecipeClient({
         <div className="mt-12 flex items-center space-x-4">
           <div className="relative w-16 h-16 rounded-full overflow-hidden">
             <Image
-              src="/placeholder.svg"
+              src="/images/generic_avatar.png"
               alt={recipe.author?.name ?? "Unknown Author"}
               fill
               className="object-cover"
