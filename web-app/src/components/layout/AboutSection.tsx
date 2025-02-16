@@ -55,7 +55,7 @@ export default function AboutSection() {
         >
           <div className="relative aspect-[4/3] md:aspect-square">
             <Image
-              src="/images/About.jpg"
+              src="/images/about.jpg"
               alt="Person cooking"
               fill
               sizes="(max-width: 768px) 100vw, 50vw"

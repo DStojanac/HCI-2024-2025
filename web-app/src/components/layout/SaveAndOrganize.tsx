@@ -94,7 +94,7 @@ export default function SaveAndOrganize() {
         >
           <div className="relative aspect-[4/3] md:aspect-square rounded">
             <Image
-              src="/images/SaveAndOrganize.png"
+              src="/images/saveAndOrg.jpg"
               alt="Person cooking and looking at recipe"
               fill
               sizes="(max-width: 768px) 100vw, 50vw"

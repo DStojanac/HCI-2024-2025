@@ -35,11 +35,11 @@ export default function Benefits() {
           >
             <div className="relative aspect-[4/3] md:aspect-square">
               <Image
-                src="/images/Benefits.png"
+                src="/images/discover.jpg"
                 alt="Hands preparing dough with flour"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover rounded-lg grayscale"
+                className="object-cover rounded-lg "
               />
             </div>
           </motion.div>
