@@ -98,7 +98,7 @@ export default function LoginPage() {
                         disabled={isPending}
                         placeholder="Enter your email"
                         type="email"
-                        className="w-full border-input border-main-paragraph-text rounded-none focus:border-main-btn focus:ring-main-btn"
+                        className="w-full border-input border-main-paragraph-text rounded focus:border-main-btn focus:ring-main-btn"
                       />
                     </FormControl>
                     <FormMessage className="text-navigation-text" />
@@ -118,7 +118,7 @@ export default function LoginPage() {
                         disabled={isPending}
                         placeholder="********"
                         type="password"
-                        className="w-full border-input border-main-paragraph-text rounded-none focus:border-main-btn focus:ring-main-btn"
+                        className="w-full border-input border-main-paragraph-text rounded focus:border-main-btn focus:ring-main-btn"
                       />
                     </FormControl>
                     <FormMessage className="text-navigation-text" />
@@ -139,7 +139,7 @@ export default function LoginPage() {
           </Form>
 
           <div className="text-center text-sm text-muted-foreground mt-8">
-            © 2024 Cooksy
+            © 2025 Cooksy
           </div>
         </div>
       </div>
