@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import authConfig from "@/auth.config";
-import { getToken } from "next-auth/jwt";
+// import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 import {
   DEFAULT_LOGIN_REDIRECT,
@@ -11,7 +11,7 @@ import {
 } from "./routes";
 
 const { auth } = NextAuth(authConfig);
-const secret = process.env.AUTH_SECRET;
+// const secret = process.env.AUTH_SECRET;
 
 export default auth(async (req) => {
   const { nextUrl } = req;
