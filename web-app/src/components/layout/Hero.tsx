@@ -12,11 +12,12 @@ export default function Hero() {
     <section className="relative min-h-[602px] md:min-h-[calc(100vh-78px)] sm:min-h-[calc(100vh-78px)] flex items-center">
       <div className="absolute inset-0 z-0">
         <Image
-          src="/images/Hero_new.jpg"
+          src="/images/Hero_v4.jpg"
           alt="Table with food"
           fill
           quality={75}
           priority
+          sizes="(max-width: 1920px) 100vw, (max-width: 1024px) 50vw, 33vw"
           className={`
             object-cover brightness-100 transition-opacity duration-700
             ${isLoading ? "opacity-0" : "opacity-100"}
