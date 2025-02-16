@@ -1,6 +1,5 @@
 import NextAuth from "next-auth";
 import authConfig from "@/auth.config";
-// import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 import {
   DEFAULT_LOGIN_REDIRECT,
@@ -11,7 +10,6 @@ import {
 } from "./routes";
 
 const { auth } = NextAuth(authConfig);
-// const secret = process.env.AUTH_SECRET;
 
 export default auth(async (req) => {
   const { nextUrl } = req;
@@ -40,14 +38,6 @@ export default auth(async (req) => {
     if (!isLoggedIn) {
       return Response.redirect(new URL("/login", nextUrl));
     }
-
-    // Decoding token to get role from logged in user
-    // const token = await getToken({ req, secret });
-    // const userRole = token?.role;
-
-    // if (userRole !== "admin") {
-    //   return Response.redirect(new URL("/", nextUrl));
-    // }
     return;
   }
 

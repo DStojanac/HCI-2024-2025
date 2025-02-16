@@ -195,12 +195,6 @@ export default function RecipeClient({
         {/* Author Information */}
         <div className="mt-12 flex items-center space-x-4">
           <div className="relative w-16 h-16 rounded-full overflow-hidden">
-            {/* <Image
-              src="/images/generic_avatar.png"
-              alt={recipe.author?.name ?? "Unknown Author"}
-              fill
-              className="object-cover"
-            /> */}
             <UserRound className="h-14 w-14  text-second-paragraph-text" />
           </div>
           <div>
