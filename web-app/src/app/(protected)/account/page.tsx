@@ -3,6 +3,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -25,6 +26,15 @@ import { RECIPE_ID_QUERY, USER_RECIPES_QUERY } from "@/sanity/lib/queries";
 import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { UserRound } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Account | Cooksy",
+  description:
+    "Learn about Cooksy's mission to make cooking accessible and enjoyable for everyone.",
+};
 
 export default async function AccountPage() {
   const session = await auth();
@@ -40,7 +50,7 @@ export default async function AccountPage() {
   const favoriteRecipes = await Promise.all(
     favoriteRecipesIds.map(async (favorite) => {
       const recipe = await client.fetch(RECIPE_ID_QUERY, { id: favorite.id });
-      return recipe;
+      return { ...recipe, id: favorite.id };
     })
   );
 
@@ -55,7 +65,7 @@ export default async function AccountPage() {
         <Card className="w-full lg:w-80 h-fit mb-6 lg:mb-0">
           <CardHeader className="text-center items-center">
             <div className="  flex w-28 h-28">
-              <UserRound className="h-28 w-28 stroke-current justify-center items-center text-main-paragraph-text" />
+              <UserRound className="h-28 w-28 stroke-current justify-center items-center text-second-paragraph-text" />
             </div>
             <CardTitle className="text-2xl">{session.user.name}</CardTitle>
           </CardHeader>
@@ -104,7 +114,7 @@ export default async function AccountPage() {
             <TabsContent value="recipes">
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {user_recipes.map((recipe) => (
-                  <Card key={recipe._id}>
+                  <Card className="flex flex-col h-full" key={recipe._id}>
                     <div className="relative aspect-video">
                       <Image
                         src={
@@ -117,7 +127,7 @@ export default async function AccountPage() {
                         className="object-cover rounded-t-lg"
                       />
                     </div>
-                    <CardHeader>
+                    <CardHeader className="flex-1">
                       <div className="flex justify-between items-center mb-2">
                         <CardTitle className="text-lg">
                           {recipe?.title}
@@ -133,6 +143,20 @@ export default async function AccountPage() {
                         {recipe?.difficulty}
                       </CardDescription>
                     </CardHeader>
+                    <CardFooter className="flex justify-between items-center mt-auto">
+                      <Link
+                        href={"/recipes/" + recipe._id}
+                        className="font-medium text-second-paragraph-text"
+                      >
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="hover:bg-second-background font-medium text-second-paragraph-text"
+                        >
+                          View Recipe
+                        </Button>
+                      </Link>
+                    </CardFooter>
                   </Card>
                 ))}
               </div>
@@ -142,7 +166,7 @@ export default async function AccountPage() {
             <TabsContent value="favorites">
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {favoriteRecipes.map((favorite, index) => (
-                  <Card key={index}>
+                  <Card className="flex flex-col h-full" key={index}>
                     <div className="relative aspect-video">
                       <Image
                         src={
@@ -155,7 +179,7 @@ export default async function AccountPage() {
                         className="object-cover rounded-t-lg"
                       />
                     </div>
-                    <CardHeader>
+                    <CardHeader className="flex-1">
                       <div className="flex justify-between items-center mb-2">
                         <CardTitle className="text-lg">
                           {favorite?.title}
@@ -171,6 +195,20 @@ export default async function AccountPage() {
                         {favorite?.difficulty}
                       </CardDescription>
                     </CardHeader>
+                    <CardFooter className="flex justify-between items-center mt-auto">
+                      <Link
+                        href={"/recipes/" + favorite.id}
+                        className="font-medium text-second-paragraph-text"
+                      >
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="hover:bg-second-background font-medium text-second-paragraph-text"
+                        >
+                          View Recipe
+                        </Button>
+                      </Link>
+                    </CardFooter>
                   </Card>
                 ))}
               </div>
