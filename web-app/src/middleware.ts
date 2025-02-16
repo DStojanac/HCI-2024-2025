@@ -42,12 +42,12 @@ export default auth(async (req) => {
     }
 
     // Decoding token to get role from logged in user
-    const token = await getToken({ req, secret });
-    const userRole = token?.role;
+    // const token = await getToken({ req, secret });
+    // const userRole = token?.role;
 
-    if (userRole !== "admin") {
-      return Response.redirect(new URL("/", nextUrl));
-    }
+    // if (userRole !== "admin") {
+    //   return Response.redirect(new URL("/", nextUrl));
+    // }
     return;
   }
 
