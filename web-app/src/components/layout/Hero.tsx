@@ -17,7 +17,7 @@ export default function Hero() {
           fill
           quality={75}
           priority
-          sizes="(max-width: 1920px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 75vw, (max-width: 1920px) 90vw, 100vw"
           className={`
             object-cover brightness-100 transition-opacity duration-700
             ${isLoading ? "opacity-0" : "opacity-100"}
