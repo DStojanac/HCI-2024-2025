@@ -12,6 +12,7 @@ import { FavoriteButton } from "@/components/favoriteButton";
 import { useFavorites } from "@/contexts/favoritesContext";
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { UserRound } from "lucide-react";
 
 export default function RecipeClient({
   recipe,
@@ -33,7 +34,7 @@ export default function RecipeClient({
 
   return (
     <>
-      <div className="bg-main-background container mx-auto px-12 py-10 xl:px-20">
+      <div className="bg-main-background container mx-auto mb-16 px-12 py-10 xl:px-20">
         <div className="grid md:grid-cols-2 gap-8">
           {/* Left Column: Image and Quick Info */}
           <div className="space-y-6">
@@ -141,7 +142,7 @@ export default function RecipeClient({
           <h2 className="text-2xl font-semibold mb-4">Nutrition Information</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
             <Card>
-              <CardContent className="p-4 text-center">
+              <CardContent className="p-4 text-center transition-shadow shadow-sm hover:shadow-md">
                 <p className="text-lg font-medium">
                   {recipe.nutrition?.calories ?? "N/A"}
                 </p>
@@ -151,7 +152,7 @@ export default function RecipeClient({
               </CardContent>
             </Card>
             <Card>
-              <CardContent className="p-4 text-center">
+              <CardContent className="p-4 text-center transition-shadow shadow-sm hover:shadow-md">
                 <p className="text-lg font-medium">
                   {recipe.nutrition?.fat ?? "N/A"}
                 </p>
@@ -159,7 +160,7 @@ export default function RecipeClient({
               </CardContent>
             </Card>
             <Card>
-              <CardContent className="p-4 text-center">
+              <CardContent className="p-4 text-center transition-shadow shadow-sm hover:shadow-md">
                 <p className="text-lg font-medium">
                   {recipe.nutrition?.carbs ?? "N/A"}
                 </p>
@@ -169,7 +170,7 @@ export default function RecipeClient({
               </CardContent>
             </Card>
             <Card>
-              <CardContent className="p-4 text-center">
+              <CardContent className="p-4 text-center transition-shadow shadow-sm hover:shadow-md">
                 <p className="text-lg font-medium">
                   {recipe.nutrition?.protein ?? "N/A"}
                 </p>
@@ -179,7 +180,7 @@ export default function RecipeClient({
               </CardContent>
             </Card>
             <Card>
-              <CardContent className="p-4 text-center">
+              <CardContent className="p-4 text-center transition-shadow shadow-sm hover:shadow-md">
                 <p className="text-lg font-medium">
                   {recipe.nutrition?.fiber ?? "N/A"}
                 </p>
@@ -194,12 +195,13 @@ export default function RecipeClient({
         {/* Author Information */}
         <div className="mt-12 flex items-center space-x-4">
           <div className="relative w-16 h-16 rounded-full overflow-hidden">
-            <Image
+            {/* <Image
               src="/images/generic_avatar.png"
               alt={recipe.author?.name ?? "Unknown Author"}
               fill
               className="object-cover"
-            />
+            /> */}
+            <UserRound className="h-14 w-14  text-second-paragraph-text" />
           </div>
           <div>
             <p>Recipe by</p>
